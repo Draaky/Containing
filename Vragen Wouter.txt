@@ -1,0 +1,4 @@
+Dijkstra algoritme gebruiken aangezien we fixed paths hebben?
+Database of list gebruiken? 
+Projectplan laten zien, vragen technisch document.
+Vragen analyse
