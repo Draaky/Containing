@@ -80,12 +80,12 @@ public class AGV {
     }    
     public void addContainer(Container container)
     {
-        System.out.println("AGV HAS CONTAIENR");
+        //System.out.println("AGV HAS CONTAIENR");
         this.container = container;  
     }
     public Container removeContainer()
     {
-        System.out.println("AGV HAS LOST A CONTAIENR");
+        //System.out.println("AGV HAS LOST A CONTAIENR");
         Container result = container;  //save container in new value;
         container = null;              //clean container.
         return result;

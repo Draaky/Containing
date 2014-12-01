@@ -39,6 +39,7 @@ public class TruckCrane {
     private boolean active = true;
     private MotionPath path;
     private MotionEvent motionControl;
+    private MotionEvent motionControlContainer;
     private Vector3f spawnLoc;
     private Vector3f posTruck;
     private Vector3f posAGV;
@@ -56,10 +57,11 @@ public class TruckCrane {
         posTruck = new Vector3f(spawnLoc.x , spawnLoc.y - 11.45f, spawnLoc.z - 17);
         posAGV  = new Vector3f(spawnLoc.x, spawnLoc.y - 11.45f, spawnLoc.z + 17);
         
-        /*System.out.println(spawnLoc);
-        System.out.println(posAGV);
-        System.out.println(posTruck);*/
+        System.out.println("spawn" + spawnLoc);
+        System.out.println("AGV" + posAGV);
+        System.out.println("Truck" + posTruck);
         createTruckCrane();
+        
     }
     
     private void createTruckCrane()
@@ -80,7 +82,7 @@ public class TruckCrane {
         pitch90.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
         crane.rotate(pitch90);*/
         
-        Cylinder w = new Cylinder(20, 50, 2, 1, true);
+        //Cylinder w = new Cylinder(20, 50, 2, 1, true);
         /*Geometry superMagnet = new Geometry("magnet", w);
         superMagnet.rotate((float)(0.5*Math.PI),0,0);
         superMagnet.move(posAGV.x, posAGV.y + 11.5f, posAGV.z);
@@ -95,19 +97,19 @@ public class TruckCrane {
     public void setContainerLoc(){
         if(container != null)
             container.containerNode.setLocalTranslation(
-                new Vector3f(truckCraneNode.getWorldTranslation().x,
-                    truckCraneNode.getWorldTranslation().y - 7.5f,
-                    truckCraneNode.getWorldTranslation().z));
+                new Vector3f(spawnLoc.x,
+                    truckCraneNode.getLocalTranslation().y - 7.5f,
+                    truckCraneNode.getLocalTranslation().z));
            
     }
     public void addContainer(Container container)
     {
-        System.out.println("CRANE HAS CONTAINER");
+        //System.out.println("CRANE HAS CONTAINER");
         this.container = container;   
     }
     public Container removeContainer()
     {
-        System.out.println("CRANE HAS LOST A CONTAINER");
+        //System.out.println("CRANE HAS LOST A CONTAINER");
         Container result = container;  //save container in new value;
         container = null;              //clean container.
         return result;
@@ -123,33 +125,36 @@ public class TruckCrane {
     }
     
     // Motion path
-    public void setMotion(int status){ // status 1 truck -> agv // status 2 agv -> truck
+    public void setMotion(int status){ // status 1 agv -> truck // status 2 truck -> agv
         path = new MotionPath();
         
-            path.addWayPoint(new Vector3f(posAGV.x, spawnLoc.y, posAGV.z));
-            path.addWayPoint(new Vector3f(posTruck.x, spawnLoc.y, posTruck.z)); // + 5f));
-            path.addWayPoint(new Vector3f(posAGV.x, spawnLoc.y, posAGV.z));
+            path.addWayPoint(new Vector3f(0, spawnLoc.y, posAGV.z));
+            path.addWayPoint(new Vector3f(0, spawnLoc.y, posTruck.z +5)); // + 5f));
+            path.addWayPoint(new Vector3f(0, spawnLoc.y, posAGV.z));
             
         path.enableDebugShape(assetManager, rootNode);
         
         motionControl = new MotionEvent(truckCraneNode,path);
+        
         motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
        // motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
         motionControl.setInitialDuration(10f);
-        motionControl.setSpeed(2f);     
+        motionControl.setSpeed(2f);   
+        
+        
         path.setCycle(false);
         if(status == 2 && agv != null && agv.container != null){
             addContainer(agv.removeContainer()); 
             //agv = null;
         }
-        if(status == 1){ // truck -> agv
+        if(status == 1){ // agv -> truck
             path.addListener(new MotionPathListener() {
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 
-               System.out.println(wayPointIndex);
+               //System.out.println(wayPointIndex);
                 
                if (path.getNbWayPoints() == wayPointIndex + 1) {
-                   System.out.println("FINISH");
+                   //System.out.println("FINISH");
                    if(agv != null && container != null){
                         agv.addContainer(removeContainer()); 
                         //agv = null;
@@ -162,19 +167,25 @@ public class TruckCrane {
                             //truck = null;
                         }
                     }
+                    if(wayPointIndex == 1){
+                       if(truck != null && truck.container != null){
+                            addContainer(truck.removeContainer());
+                            //truck = null;
+                        }
+                    }
                     
                 }
             }
         });
-        } else { // agv -> truck
+        } else { // truck -> agv
             path.addListener(new MotionPathListener() {
 
             public void onWayPointReach(MotionEvent control, int wayPointIndex) {
                 
-               System.out.println(wayPointIndex);
+               //System.out.println(wayPointIndex);
                 
                if (path.getNbWayPoints() == wayPointIndex + 1) {
-                   System.out.println("FINISH");
+                   //System.out.println("FINISH");
                 } else {
                     //System.out.println("CP : " + wayPointIndex);
                     if(wayPointIndex == 1){

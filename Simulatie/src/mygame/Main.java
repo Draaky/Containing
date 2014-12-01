@@ -12,7 +12,6 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Quaternion;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main extends SimpleApplication {
@@ -46,15 +45,16 @@ public class Main extends SimpleApplication {
             AGVList.add(new AGV(this.rootNode, this.assetManager));
         }
         
-        for(int k=0; k<10;k++)
+        for(int k=0; k < 10;k++)
         {
             truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
-                           new Vector3f(0+(k * 10),0,0+(k * 10))));
+                           new Vector3f(20*(k+1),0,0)));
             truckCraneList.get(k).setAGV(AGVList.get(k));
             truckCraneList.get(k).setTruck(truckList.get(k));
+            //useCommand("tc " + k + " 1");
         }
         /*truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
-                           new Vector3f(0,0,0)));*/
+                           new Vector3f(0,0,0)));
         
        /* shipCraneList.add( new ShipCrane(this.rootNode, this.assetManager, 
                            new Vector3f(100,0,0)));
@@ -72,10 +72,10 @@ public class Main extends SimpleApplication {
        
        
         initFloor();
-        //useCommand("tc 1 1");
+       // useCommand("tc 2 1");
         
         
-        /*Thread thread = new Thread(){
+        Thread thread = new Thread(){
             public void run(){
                 System.out.println("Thread Running");
                 Scanner scan = new Scanner(System.in);
@@ -86,8 +86,8 @@ public class Main extends SimpleApplication {
                     }
                     else if(myLine != ""){
                         try{
-                            this.sleep(1000);
-                        }catch(Exception e){}
+                            this.sleep(2000);
+                        }catch(Exception e){System.out.println(e);}
                     System.out.println("command = "+myLine);
                     useCommand(myLine);
                     myLine = "";}
@@ -95,7 +95,7 @@ public class Main extends SimpleApplication {
             }
         };
 
-        thread.start();*/
+        thread.start();
         
     }
     public void initFloor() {
@@ -136,7 +136,6 @@ public class Main extends SimpleApplication {
         
         String[] parts = command.split(" ");
         if(parts.length == 3){
-            String part1 = parts[0]; // object
             int id = 0;
             int action = 0;
             try{
@@ -176,15 +175,16 @@ public class Main extends SimpleApplication {
         public void onAction(String name, boolean keyPressed, float tpf) {
           if (name.equals("play") && !keyPressed) {
               
-              System.out.println("START  Truck AGV");
+              //System.out.println("START  Truck AGV");
               for(TruckCrane truckC : truckCraneList)
               {
+                    System.out.println("\n" +truckC.truckCraneNode.getLocalTranslation());
                     truckC.setMotion(1);
                     truckC.playMotion();
               }
           }
           if (name.equals("shoot") && !keyPressed) {
-                System.out.println("START AGV Truck");
+                //System.out.println("START AGV Truck");
                 for(TruckCrane truckC : truckCraneList)
                 {
                       truckC.setMotion(2);
