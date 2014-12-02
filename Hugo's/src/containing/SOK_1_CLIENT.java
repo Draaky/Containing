@@ -9,27 +9,54 @@ import java.net.*;
  */
 public class SOK_1_CLIENT {
     
+    private static SOK_1_CLIENT_CLIENT ChatClient;
+    public static String Username = "Simulatie/Tablet";
+    
     //void main to run it
     public static void main(String[] args) throws Exception
+    //{
+    //public SOK_1_CLIENT()
     {
-        //Making a new client socket instance
-        SOK_1_CLIENT CLIENT = new SOK_1_CLIENT();
-        CLIENT.run();
+    Connect();
     }
     
-    public void run() throws Exception
+    public static void Connect()
     {
-        //making a new socket with ip en port number which will 
-        Socket SOCK = new Socket("localhost",444);
-        // making a new printstream that prints to the socket
-        PrintStream PS = new PrintStream(SOCK.getOutputStream());
-        //printing in socket
-        PS.println("Hello to SERVER from CLIENT.");
-        //reading socket
-        InputStreamReader IR = new InputStreamReader(SOCK.getInputStream());
-        BufferedReader BR = new BufferedReader(IR);
-        //printing in console
-        String MESSAGE = BR.readLine();
-        System.out.println(MESSAGE);
+        try
+        {
+            final int port = 444;
+            final String host = "localhost";
+            Socket sock = new Socket(host,port);
+            System.out.println("Connected to: " + host);
+            
+            ChatClient = new SOK_1_CLIENT_CLIENT(sock);
+             System.out.println("OS: " + sock.getOutputStream());
+            PrintWriter out = new PrintWriter(sock.getOutputStream());
+            out.println(Username);
+            out.flush();
+            
+            Thread Z = new Thread(ChatClient);
+            Z.start();
+            //ChatClient.Send("testing");
+            //for (int i = 0; i < 10000; i++) {
+            //    Send("nr." + i);
+           // }
+           
+            
+        }
+        catch(Exception Z)
+        {
+            System.out.print(Z);
+            System.exit(0);
+        }
     }
+    
+    public static void Send(String msg)
+    {
+        if(!msg.equals(""))
+        {
+            ChatClient.Send(msg);
+        }
+    }
+    
 }

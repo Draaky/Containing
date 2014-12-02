@@ -2,6 +2,7 @@ package containing;
 
 public class Container {
 
+    
 	String containerID;
         //aankomst
         int adatumD;
@@ -36,7 +37,7 @@ public class Container {
         String soort;
         String gevaar;
         String iso;
-        
+    
         
         
         
