@@ -14,8 +14,11 @@ public class XML_Parser {
     
     
     //making a list with the object Containers
-    List<Container> Containers = new ArrayList<Container>();
-
+    List<Container> ZeeContainers = new ArrayList<Container>();
+    List<Container> BinnenContainers = new ArrayList<Container>();
+    List<Container> TreinContainers = new ArrayList<Container>();
+    List<Container> VrachtContainers = new ArrayList<Container>();
+    int error;
    public XML_Parser()
    {
     try {
@@ -83,10 +86,31 @@ public class XML_Parser {
                         eContainer.vsoortvervoer = vsoortvervoer;
                         eContainer.vvervoerbedrijf = vvervoerbedrijf;
                         eContainer.x = Float.parseFloat(eElement.getElementsByTagName("x").item(0).getTextContent());
-                        eContainer.y = Float.parseFloat(eElement.getElementsByTagName("x").item(0).getTextContent());
-                        eContainer.z = Float.parseFloat(eElement.getElementsByTagName("x").item(0).getTextContent());
-                        Containers.add(eContainer);
+                        eContainer.y = Float.parseFloat(eElement.getElementsByTagName("y").item(0).getTextContent());
+                        eContainer.z = Float.parseFloat(eElement.getElementsByTagName("z").item(0).getTextContent());
                         
+                        
+                        if ("trein".equals(eContainer.asoortvervoer))
+                        {
+                            TreinContainers.add(eContainer);
+                        }
+                        else if ("zeeschip".equals(eContainer.asoortvervoer))
+                        {
+                            ZeeContainers.add(eContainer);
+                        }
+                        else if ("vrachtauto".equals(eContainer.asoortvervoer))
+                        {
+                            VrachtContainers.add(eContainer);
+                        }
+                        else if ("binnenschip".equals(eContainer.asoortvervoer))
+                        {
+                            BinnenContainers.add(eContainer);
+                        }
+                        else
+                        {
+                            System.out.println(eContainer.asoortvervoer);
+                            error++;
+                        }
                         //obsolete testing of the xml parser
 			//System.out.println("Container id: " + eElement.getAttribute("id"));
 			//System.out.println("Aankomst");
