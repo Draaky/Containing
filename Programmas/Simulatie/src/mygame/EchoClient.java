@@ -131,8 +131,9 @@ public class EchoClient implements Runnable {
         
         // use this command.
             System.out.println(responseLine);
-            if(!responseLine.contains("established"))
-                new Main().useCommand(responseLine);
+            if(responseLine.contains("Controller"))
+                Main.inputBuffer.addLast(responseLine);
+                //Main.useCommand(responseLine);
         
         if (responseLine.indexOf("*** Bye") != -1)
         {

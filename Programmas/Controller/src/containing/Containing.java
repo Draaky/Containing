@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import static java.lang.Thread.sleep;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Collections;
@@ -122,10 +123,10 @@ public class Containing extends Thread {
         System.out.println(x);
         System.out.println(y);
         System.out.println(z);
-        
+        sleep (1000);
         EchoClient.os.println(" tcAddTruck 1 2");
         EchoClient.os.println(" tcAddAGV 1 2");
-        EchoClient.os.println(" tc 1 2");
+        EchoClient.os.println(" tc 1 1");
         
         
     //EchoServer ES = new EchoServer("Localhost");
