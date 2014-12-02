@@ -16,9 +16,16 @@ import java.util.Scanner;
 
 public class Main extends SimpleApplication {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         Main app = new Main();
         app.start();
+        // Create Client.
+        Thread EchoClientSimmulator = new Thread(){
+           public void run(){
+               EchoClient.main(args);
+           }
+       };
+       EchoClientSimmulator.start();
     }
     ArrayList<Truck> truckList = new ArrayList<Truck>();
     ArrayList<TruckCrane> truckCraneList = new ArrayList<TruckCrane>();
@@ -36,7 +43,10 @@ public class Main extends SimpleApplication {
         flyCam.setRotationSpeed(10f);
         //cam.setLocation(new Vector3f(10f,20f,-35f));
         
+        // create floor.
         initFloor();
+        
+        // spawn 10 trucks, agv's and trucks.
         for(int i = 0; i < 10; i++)
         {
             containerList.add( new Container(this.rootNode, this.assetManager));
@@ -44,13 +54,15 @@ public class Main extends SimpleApplication {
             truckList.get(i).addContainer(containerList.get(i));
             AGVList.add(new AGV(this.rootNode, this.assetManager));
         }
-        
+        // spawn 10 truckcranes. Place AGV's and trucks at a location.
         for(int k=0; k < 10;k++)
         {
             truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
                            new Vector3f(20*(k+1),0,0)));
-            truckCraneList.get(k).setAGV(AGVList.get(k));
-            truckCraneList.get(k).setTruck(truckList.get(k));
+            /*truckCraneList.get(k).setAGV(AGVList.get(k));
+            truckCraneList.get(k).setTruck(truckList.get(k));*/
+            truckList.get(k).truckNode.setLocalTranslation(-150+(10*k), - 11.45f, 150);
+            AGVList.get(k).agvNode.setLocalTranslation(150+(10*k), - 11.45f, -150);
             //useCommand("tc " + k + " 1");
         }
         /*truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
@@ -62,19 +74,19 @@ public class Main extends SimpleApplication {
         seaShipCraneList.add( new SeaShipCrane(this.rootNode, this.assetManager, 
                            new Vector3f(-100,0,0)));*/
         
-        
+       // input commands for testing use.
        inputManager.addMapping("shoot", 
                new MouseButtonTrigger(MouseInput.BUTTON_LEFT) );
        
        inputManager.addMapping("play", 
        new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-       inputManager.addListener(actionListener, "shoot", "play");
+       //inputManager.addListener(actionListener, "shoot", "play");
        
-       
-        initFloor();
+        
        // useCommand("tc 2 1");
         
-        
+       
+       // Thread  for using commands 
 //        Thread thread = new Thread(){
 //            public void run(){
 //                System.out.println("Thread Running");
@@ -95,8 +107,7 @@ public class Main extends SimpleApplication {
 //            }
 //        };
 //
-//        thread.start();
-        
+//        thread.start();\
     }
     public void initFloor() {
         Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");  
@@ -135,15 +146,17 @@ public class Main extends SimpleApplication {
     public void useCommand(String command){
         
         String[] parts = command.split(" ");
-        if(parts.length == 3){
+        //if(parts.length == 3){
+            String cmd = parts[1];
             int id = 0;
             int action = 0;
             try{
-                 id = Integer.parseInt(parts[1]);// id
-                 action = Integer.parseInt(parts[2]);// command
+                 id = Integer.parseInt(parts[2]);// id
+                 action = Integer.parseInt(parts[3]);// command
             }
             catch(Exception e){System.out.println(e + "\n cannot convert string part to int.");}
-            if(parts[0].equals("tc")) // TruckCrane 
+            
+            if(cmd.equals("tc")) // TruckCrane 
             {
                 try{
                     truckCraneList.get(id).setMotion(action);
@@ -151,7 +164,7 @@ public class Main extends SimpleApplication {
                 }
                 catch(Exception e){System.out.println(e);}
             }
-            else if(parts[0].equals("sc")) // ShipCrane
+            else if(cmd.equals("sc")) // ShipCrane
             {
                 try{
                     shipCraneList.get(id).setMotion(action);
@@ -159,7 +172,7 @@ public class Main extends SimpleApplication {
                 }
                 catch(Exception e){System.out.println(e);}
             }
-            else if(parts[0].equals("ssc")) // SeaShipCrane
+            else if(cmd.equals("ssc")) // SeaShipCrane
             {
                 try{
                     seaShipCraneList.get(id).setMotion(action);
@@ -167,9 +180,21 @@ public class Main extends SimpleApplication {
                 }
                 catch(Exception e){System.out.println(e);}
             }
-        }
-        else
-            System.out.println("Invalid String : size = " + parts.length + ", must be 3");
+            else if(cmd.equals("tcAddTruck")){
+                try{
+                    truckCraneList.get(id).setAGV(AGVList.get(action));
+                }
+                catch(Exception e){System.out.println(e);}
+            }
+            else if(cmd.equals("tcAddAGV")){
+                try{
+                    truckCraneList.get(id).setAGV(AGVList.get(action));
+                }
+                catch(Exception e){System.out.println(e);}
+            }
+        //}
+        //else
+           // System.out.println("Invalid String : size = " + parts.length + ", must be 3");
     }
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {

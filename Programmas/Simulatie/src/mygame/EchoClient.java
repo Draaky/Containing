@@ -21,15 +21,15 @@ public class EchoClient implements Runnable {
   private static boolean closed = false;
   public static String test;
   
-  private static String msg = "Controller";
+  private static String msg = "Simulator";
   //public static int i = 0;
   public static String getmsg()
   {
-  return msg;
+        return msg;
   }
   static void setmsg(String x)
   { 
-      EchoClient.msg = x; 
+        EchoClient.msg = x; 
   }
   
   
@@ -128,7 +128,12 @@ public class EchoClient implements Runnable {
       while (true) {
         //System.out.println("test");
         responseLine = is.readLine();
-        System.out.println(responseLine);
+        
+        // use this command.
+            System.out.println(responseLine);
+            if(!responseLine.contains("established"))
+                new Main().useCommand(responseLine);
+        
         if (responseLine.indexOf("*** Bye") != -1)
         {
           System.exit(1);

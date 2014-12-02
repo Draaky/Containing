@@ -128,7 +128,10 @@ public class EchoClient implements Runnable {
       while (true) {
         //System.out.println("test");
         responseLine = is.readLine();
+        
+        // use cmd.
         System.out.println(responseLine);
+        
         if (responseLine.indexOf("*** Bye") != -1)
         {
           System.exit(1);

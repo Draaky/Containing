@@ -123,7 +123,9 @@ public class Containing extends Thread {
         System.out.println(y);
         System.out.println(z);
         
-        EchoClient.os.println("doe iets hier");
+        EchoClient.os.println(" tcAddTruck 1 2");
+        EchoClient.os.println(" tcAddAGV 1 2");
+        EchoClient.os.println(" tc 1 2");
         
         
     //EchoServer ES = new EchoServer("Localhost");
@@ -146,8 +148,8 @@ public class Containing extends Thread {
 
     }
 
-    public void testsend(int i) {
-        // SOK_1_CLIENT.Send("test" + i);
+    public static void send(String msg) {
+        EchoClient.os.println(msg);
     }
 
 }
