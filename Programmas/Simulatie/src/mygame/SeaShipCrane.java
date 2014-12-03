@@ -50,7 +50,6 @@ public class SeaShipCrane {
         this.rootNode = rootNode;
         this.assetManager = assetManager;
         
-        
         container = null;
         truck = null;
         agv = null;

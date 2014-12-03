@@ -201,7 +201,6 @@ public class TruckCrane {
     }
     //Show the motion path.
     public void showMotion(){
-        
         if (active) {
             active = false;
             path.disableDebugShape();
