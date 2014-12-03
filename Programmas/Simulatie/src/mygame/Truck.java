@@ -89,6 +89,7 @@ public class Truck {
         truck.attachChild(wheel3);
         truck.attachChild(wheel4);
         truckNode = GeometryBatchFactory.optimize(truck, true);
+        //truckNode.scale(0.5f);
         rootNode.attachChild(truckNode);
     }    
     public void addContainer(Container container)

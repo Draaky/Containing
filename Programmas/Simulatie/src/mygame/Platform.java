@@ -49,7 +49,7 @@ public class Platform extends Node {
         Material plat_mat;
         plat_mat = new Material (assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         p.setMaterial(plat_mat);
-        p.setLocalTranslation(0, -15f, 0f);
+        p.setLocalTranslation(0, -45f, 0f);
         //plat_mat.setColor("Color", ColorRGBA.Black); 
         this.rootNode.attachChild(p);
         

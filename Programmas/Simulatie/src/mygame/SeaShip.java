@@ -48,7 +48,9 @@ public class SeaShip {
         Spatial s = assetManager.loadModel("Models/ship/seaship.j3o");
         s.scale(1.20f, 1.20f, 1.20f);
         //schip.rotate(0.0f, -3.0f, 0.0f);      //eventueel
-        s.setLocalTranslation(880f, 15.1f, 15f);
+        s.setLocalTranslation(880f, -
+                
+                15.1f, 15f);
         // You must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));

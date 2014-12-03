@@ -48,7 +48,7 @@ public class BargeShip {
         Spatial s = assetManager.loadModel("Models/ship/seaship.j3o");
         s.scale(0.6f, 0.6f, 0.6f);
         s.rotate(0f, (float)(0.5*Math.PI), 0f);    //eventueel
-        s.setLocalTranslation(165f, 15.1f, -450f);      //veranderen
+        s.setLocalTranslation(165f, -15.1f, -450f);      //veranderen
         // You must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));

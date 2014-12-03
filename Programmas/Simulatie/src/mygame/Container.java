@@ -41,6 +41,7 @@ public class Container {
         
         containerNode = new Node("Container");
         containerNode.attachChild(container);
+        //containerNode.scale(0.5f);
         //ContainerNode = GeometryBatchFactory.optimize(containerNode, true);
         rootNode.attachChild(containerNode);
     }    
