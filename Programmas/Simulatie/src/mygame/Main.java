@@ -12,7 +12,10 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Quaternion;
+import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main extends SimpleApplication {
 
@@ -27,6 +30,8 @@ public class Main extends SimpleApplication {
        };
        EchoClientSimmulator.start();
     }
+    // zoek uit hoe een echte string buffer werkt. "roundedbuffer."
+    static LinkedList<String> inputBuffer = new LinkedList();
     ArrayList<Truck> truckList = new ArrayList<Truck>();
     ArrayList<TruckCrane> truckCraneList = new ArrayList<TruckCrane>();
     ArrayList<ShipCrane> shipCraneList = new ArrayList<ShipCrane>();
@@ -80,34 +85,32 @@ public class Main extends SimpleApplication {
        
        inputManager.addMapping("play", 
        new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-       //inputManager.addListener(actionListener, "shoot", "play");
+       inputManager.addListener(actionListener, "shoot", "play");
        
         
        // useCommand("tc 2 1");
         
        
        // Thread  for using commands 
-//        Thread thread = new Thread(){
-//            public void run(){
-//                System.out.println("Thread Running");
-//                Scanner scan = new Scanner(System.in);
-//                while(true){
-//                    String myLine = scan.nextLine();
-//                    if(myLine == "stop"){
-//                        this.stop();
-//                    }
-//                    else if(myLine != ""){
-//                        try{
-//                            this.sleep(2000);
-//                        }catch(Exception e){System.out.println(e);}
-//                    System.out.println("command = "+myLine);
-//                    useCommand(myLine);
-//                    myLine = "";}
-//                }
-//            }
-//        };
-//
-//        thread.start();\
+        Thread thread;
+        thread = new Thread(){
+            @Override
+            public void run(){
+                System.out.println("Thread Running, checking inputbuffer.");
+                while(true){
+                    if (!inputBuffer.isEmpty())
+                    {
+                        System.out.println("pop");
+                        useCommand(inputBuffer.pop());
+                    }
+                    else{
+                        // do nothing // this is bug fix.
+                        System.out.print("");
+                    }
+                }
+            }
+        };
+        thread.start();
     }
     public void initFloor() {
         Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");  
@@ -159,6 +162,7 @@ public class Main extends SimpleApplication {
             if(cmd.equals("tc")) // TruckCrane 
             {
                 try{
+                    System.out.println(truckCraneList.get(id));
                     truckCraneList.get(id).setMotion(action);
                     truckCraneList.get(id).playMotion();
                 }
@@ -167,6 +171,7 @@ public class Main extends SimpleApplication {
             else if(cmd.equals("sc")) // ShipCrane
             {
                 try{
+                    System.out.println(shipCraneList.get(id));
                     shipCraneList.get(id).setMotion(action);
                     shipCraneList.get(id).playMotion();
                 }
@@ -175,6 +180,7 @@ public class Main extends SimpleApplication {
             else if(cmd.equals("ssc")) // SeaShipCrane
             {
                 try{
+                    System.out.println(seaShipCraneList.get(id));
                     seaShipCraneList.get(id).setMotion(action);
                     seaShipCraneList.get(id).playMotion();
                 }
@@ -182,12 +188,14 @@ public class Main extends SimpleApplication {
             }
             else if(cmd.equals("tcAddTruck")){
                 try{
-                    truckCraneList.get(id).setAGV(AGVList.get(action));
+                    System.out.println(truckList.get(action));
+                    truckCraneList.get(id).setTruck(truckList.get(action));
                 }
                 catch(Exception e){System.out.println(e);}
             }
             else if(cmd.equals("tcAddAGV")){
                 try{
+                    System.out.println(AGVList.get(action));
                     truckCraneList.get(id).setAGV(AGVList.get(action));
                 }
                 catch(Exception e){System.out.println(e);}
@@ -210,11 +218,16 @@ public class Main extends SimpleApplication {
           }
           if (name.equals("shoot") && !keyPressed) {
                 //System.out.println("START AGV Truck");
-                for(TruckCrane truckC : truckCraneList)
+               /* for(TruckCrane truckC : truckCraneList)
                 {
                       truckC.setMotion(2);
                       truckC.playMotion();
-                }
+                }*/
+              System.out.println(inputBuffer.size());
+              for(String line: inputBuffer)
+              {
+                  System.out.println("comand : " + line);
+              }
             }
         }
     };
