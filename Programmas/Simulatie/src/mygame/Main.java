@@ -74,11 +74,11 @@ public class Main extends SimpleApplication {
         //initFloor();// create floor.
         
         //Jos`// fix  not working as intended.
-        synchronized(this) {
+        //synchronized(this) {
             initPPcWater();
             initScene();
             //initInputs();
-        }
+        //}
         Platform p = new Platform(rootNode, assetManager);  // place the floor
         
         // spawn 10 trucks, agv's and trucks.
@@ -123,8 +123,7 @@ public class Main extends SimpleApplication {
         }        
        
         s = new SeaShip(rootNode, assetManager); // spawn a big ship.
-        
-        
+        //s.rootNode.
        /*// input commands for testing use.
        inputManager.addMapping("shoot", 
                new MouseButtonTrigger(MouseInput.BUTTON_LEFT) );
@@ -138,7 +137,7 @@ public class Main extends SimpleApplication {
         
        // <editor-fold defaultstate="collapsed" desc="Thread">
        // Thread  for using commands 
-        Thread thread;
+       /* Thread thread;
         thread = new Thread(){
             @Override
             public void run(){
@@ -156,7 +155,7 @@ public class Main extends SimpleApplication {
                 }
             }
         };
-        thread.start();
+        thread.start();*/
        // </editor-fold>
     }
     // <editor-fold defaultstate="collapsed" desc="Platformen eromheen">
@@ -264,6 +263,12 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         //TODO: add update code
+        while (!inputBuffer.isEmpty())
+        {
+            System.out.println("pop" + inputBuffer.getFirst());
+            useCommand(inputBuffer.pop());
+        }
+        
         
         for(AGV agv : AGVList)
         {
