@@ -1,0 +1,57 @@
+* 2 keer testverslag
+
+doel van testen:
+ - bugs fixen
+ - bewijzen dat het (niet) werkt
+ - risiciobeheersing
+ - continu verbetering & optimalisatie (van het ontwikkelproces)
+om cliënt blij te maken.
+
+eisen:
+- werking van software moet getest worden, zodat opdrachtgever overtuigd raakt van de kwaliteit (junit)
+- projecthandleiding
+- aantoonbare testen (bv Junit)
+- testplan, hoe je gaat testen en eventueel wat je gaat testen.
+conclusie van een testmanager;
+- bovenstaande eisen zijn niet allemaal SMART, en moet verder uitgewerkt worden (acceptatiecriteria)
+
+hoe werkt het programma, op welke manier gewerkt
+- vooraf duidelijk zijn gedefineerd wanneer een test is geslaagd (passed/failed)
+- bij ieder testgeval definieer je dus de verwachte uitkomst("testverwachting")
+- test moet reproduceerbaar zijn en steeds hetzelfde resultaat opleveren. Niet alleen doordat je een test met junit doet.
+	, ook doordat je ervoor zorgd dat je dezelfde test altidj onder dezelfde omstandigheid uitvoert. bv. database vulling.
+wat analyseren & veranderen
+
+* Code coverage/dekkingsgraad
+- Statement coverage:
+per lijn, alle mogelijkheden. alle onderdelen van software moet op meer dan 1 manier getest worden
+- Decision coverage
+- Condition coverage
+
+test plan:
+- features(onderdelen) to (not) be tested
+- aanpak (activiteiten, technieken en gereedschap)
+- criteria voor onderdeel pass/fail
+- test deliverables
+
+> unit testen
+> integratie testen:
+alle rails op één spoort laten draaien
+
+Verschil tussen deze twee:
+unit:							integratie:
+hangt af van java code					hangt af van external systems
+makkelijk te schrijven en te verifiëren			setup kan moeilijk zijn
+enkel class(unit) apart getest				een/meer componenten getest
+etc.
+
+Systeem testen, bijna hetzelfde als integratietesten:
+Hele systeem testen als een geheel. Bevestigt dat het het systeem alle vereisten tegemoet komt.
+Valideert dat het systeem gebruikt kan worden.
+
+"test resultaat tabel": status: open/closed - beschrijving - datum - prioriteit etc
+
+
+
+
+

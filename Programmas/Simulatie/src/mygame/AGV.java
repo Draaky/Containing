@@ -76,6 +76,7 @@ public class AGV {
         agv.attachChild(wheel3);
         agv.attachChild(wheel4);
         agvNode = GeometryBatchFactory.optimize(agv, true);
+        //agvNode.scale(0.5f);
         rootNode.attachChild(agvNode);
     }    
     public void addContainer(Container container)
