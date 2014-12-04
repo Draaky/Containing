@@ -33,9 +33,8 @@ public class Main extends SimpleApplication {
         settings.setTitle("Containing");
         settings.setSettingsDialogImage("/Interface/containing.jpg");
         app.setSettings(settings);
-        
         app.start();
-        // Create Client.
+        // Create Client. That gets the commands from Controller.
         Thread EchoClientSimmulator = new Thread(){
            public void run(){
                EchoClient.main(args);
@@ -68,22 +67,19 @@ public class Main extends SimpleApplication {
         viewPort.setBackgroundColor(ColorRGBA.LightGray);
         flyCam.setMoveSpeed(150);
         flyCam.setRotationSpeed(10f);
-        cam.setLocation(new Vector3f(10f,20f,-35f));
-        cam.setFrustumFar(9000);
-        cam.onFrameChange();
+        cam.setLocation(new Vector3f(10f,20f,-35f)); // set cam location
+        cam.setFrustumFar(9000);    // set how far cam can see
+        cam.onFrameChange();       
         
-        // create floor.
-        //initFloor();
+        //initFloor();// create floor.
         
-        //Jos
+        //Jos`// fix  not working as intended.
         synchronized(this) {
             initPPcWater();
             initScene();
+            //initInputs();
         }
-        //initInputs();
-        
-        Platform p = new Platform(rootNode, assetManager);
-        
+        Platform p = new Platform(rootNode, assetManager);  // place the floor
         
         // spawn 10 trucks, agv's and trucks.
         for(int i = 0; i < 10; i++)
@@ -112,8 +108,7 @@ public class Main extends SimpleApplication {
         
         seaShipCraneList.add( new SeaShipCrane(this.rootNode, this.assetManager, 
                            new Vector3f(-100,0,0)));*/
-        
-        
+        // spawn new bargeships
         for(int i = 0; i < 2; i++)
         {
             bList.add(new BargeShip(rootNode, assetManager));           
@@ -127,21 +122,21 @@ public class Main extends SimpleApplication {
             x1 += 400f; 
         }        
        
-        s = new SeaShip(rootNode, assetManager);
+        s = new SeaShip(rootNode, assetManager); // spawn a big ship.
         
         
-       // input commands for testing use.
+       /*// input commands for testing use.
        inputManager.addMapping("shoot", 
                new MouseButtonTrigger(MouseInput.BUTTON_LEFT) );
        
        inputManager.addMapping("play", 
        new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-       inputManager.addListener(actionListener, "shoot", "play");
+       inputManager.addListener(actionListener, "shoot", "play");*/
        
         
        // useCommand("tc 2 1");
         
-        // <editor-fold defaultstate="collapsed" desc="Thread">
+       // <editor-fold defaultstate="collapsed" desc="Thread">
        // Thread  for using commands 
         Thread thread;
         thread = new Thread(){
@@ -291,6 +286,7 @@ public class Main extends SimpleApplication {
             ssc.moveMagnet();
         }
     }
+    // Get a string convert it to a command.
     public void useCommand(String command){
         
         String[] parts = command.split(" ");
@@ -349,7 +345,8 @@ public class Main extends SimpleApplication {
         //else
            // System.out.println("Invalid String : size = " + parts.length + ", must be 3");
     }
-    private ActionListener actionListener = new ActionListener() {
+    
+    /*private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
           if (name.equals("play") && !keyPressed) {
               
@@ -368,14 +365,9 @@ public class Main extends SimpleApplication {
                       truckC.setMotion(2);
                       truckC.playMotion();
                 }
-              /*System.out.println(inputBuffer.size());
-              for(String line: inputBuffer)
-              {
-                  System.out.println("comand : " + line);
-              }*/
             }
         }
-    };
+    };*/
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code

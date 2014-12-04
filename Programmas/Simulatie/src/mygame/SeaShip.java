@@ -25,6 +25,8 @@ import jme3tools.optimize.GeometryBatchFactory;
  *
  * @author Jos
  */
+/*      WORK IN PROGRESS        */
+
 public class SeaShip {
     
     Node rootNode;
