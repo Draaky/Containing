@@ -35,10 +35,8 @@ public class Containing extends Thread {
     public static void main(final String[] args) throws Exception {
         // TODO code application logic here
        
-    
-       
-       
-       
+        //EchoServer server = new EchoServer();
+        //sleep(1000);
        
        Thread EchoClientController = new Thread(){
            public void run(){

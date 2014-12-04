@@ -20,6 +20,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
+import com.jme3.texture.Texture2D;
 import com.jme3.water.WaterFilter;
 import java.util.LinkedList;
 
@@ -54,6 +55,8 @@ public class Main extends SimpleApplication {
     Quaternion pitch90 = new Quaternion();
     
     // JOS
+    Spatial scene;
+    FilterPostProcessor fpp;
     private WaterFilter water;
     private Vector3f lightdir = new Vector3f (-4f,-1f,5f);
     public ArrayList<Container> contList = new ArrayList<Container>();
@@ -65,14 +68,18 @@ public class Main extends SimpleApplication {
         viewPort.setBackgroundColor(ColorRGBA.LightGray);
         flyCam.setMoveSpeed(150);
         flyCam.setRotationSpeed(10f);
-        //cam.setLocation(new Vector3f(10f,20f,-35f));
+        cam.setLocation(new Vector3f(10f,20f,-35f));
+        cam.setFrustumFar(9000);
+        cam.onFrameChange();
         
         // create floor.
         //initFloor();
         
         //Jos
-        initScene();
-        initPPcWater();
+        synchronized(this) {
+            initPPcWater();
+            initScene();
+        }
         //initInputs();
         
         Platform p = new Platform(rootNode, assetManager);
@@ -155,7 +162,7 @@ public class Main extends SimpleApplication {
             }
         };
         thread.start();
-       // </editor-fold>ss
+       // </editor-fold>
     }
     // <editor-fold defaultstate="collapsed" desc="Platformen eromheen">
     private void TreinPlatform(){
@@ -217,25 +224,27 @@ public class Main extends SimpleApplication {
     //</editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Scene">
     private void initScene(){
-        Spatial scene = assetManager.loadModel("Scenes/Scene.j3o");
+        scene = assetManager.loadModel("Scenes/Scene.j3o");
         rootNode.attachChild(scene);
     }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Water">
     public void initPPcWater()
     { 
-        FilterPostProcessor fpp = new FilterPostProcessor(assetManager); 
-        water = new WaterFilter(rootNode, lightdir); water.setCenter(Vector3f.ZERO); 
-        water.setRadius(2600); 
+        fpp = new FilterPostProcessor(assetManager); 
+        water = new WaterFilter(rootNode, lightdir); 
+        water.setCenter(Vector3f.ZERO); 
+        water.setRadius(260000000); 
         water.setWaveScale(0.012f); 
         water.setMaxAmplitude(2f); //0.5 
         water.setFoamExistence(new Vector3f(1f, 4f, 0.5f)); 
-        //water.setFoamTexture((Texture2D) assetManager.loadTexture("Common/MatDefs/Water/Textures/foam.jpg")); 
+        water.setFoamTexture((Texture2D) assetManager.loadTexture("Common/MatDefs/Water/Textures/foam.jpg")); 
         water.setRefractionStrength(0.2f);
         water.setWaterHeight(-20f); 
         fpp.addFilter(water); 
         viewPort.addProcessor(fpp); 
     }
+    
     //</editor-fold>    
     // <editor-fold defaultstate="collapsed" desc="InitInputs">
     public void initInputs(){
@@ -354,16 +363,16 @@ public class Main extends SimpleApplication {
           }
           if (name.equals("shoot") && !keyPressed) {
                 //System.out.println("START AGV Truck");
-               /* for(TruckCrane truckC : truckCraneList)
+                for(TruckCrane truckC : truckCraneList)
                 {
                       truckC.setMotion(2);
                       truckC.playMotion();
-                }*/
-              System.out.println(inputBuffer.size());
+                }
+              /*System.out.println(inputBuffer.size());
               for(String line: inputBuffer)
               {
                   System.out.println("comand : " + line);
-              }
+              }*/
             }
         }
     };

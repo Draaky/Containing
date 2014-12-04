@@ -42,14 +42,16 @@ public class Platform extends Node {
     
  // <editor-fold defaultstate="collapsed" desc="createPlatform">
     public void createPlatform() {
-        Box platform = new Box(848f, 30f, 428.25f);
+        //Box platform = new Box(848f, 30f, 428.25f);
+        Box platform = new Box(848f, 5f, 428.25f);
         platform.scaleTextureCoordinates(new Vector2f(1, 1));
         
         Geometry p = new Geometry("platform", platform);
         Material plat_mat;
         plat_mat = new Material (assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         p.setMaterial(plat_mat);
-        p.setLocalTranslation(0, -45f, 0f);
+        //p.setLocalTranslation(0, -45f, 0f);
+        p.setLocalTranslation(0, -18.5f, 0f);
         //plat_mat.setColor("Color", ColorRGBA.Black); 
         this.rootNode.attachChild(p);
         
@@ -68,7 +70,7 @@ public class Platform extends Node {
     private void Sounds(){
         //achtergrond geluid
         s = new AudioNode(assetManager, "Sounds/traffic-11.wav", true);
-        s.setLooping(false);
+        s.setLooping(true);
         s.setPositional(false);
         s.setVolume(3);
         rootNode.attachChild(s);
