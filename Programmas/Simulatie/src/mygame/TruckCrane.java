@@ -57,9 +57,9 @@ public class TruckCrane {
         posTruck = new Vector3f(spawnLoc.x , spawnLoc.y - 11.45f, spawnLoc.z - 17);
         posAGV  = new Vector3f(spawnLoc.x, spawnLoc.y - 11.45f, spawnLoc.z + 17);
         
-        System.out.println("spawn" + spawnLoc);
+        /*System.out.println("spawn" + spawnLoc);
         System.out.println("AGV" + posAGV);
-        System.out.println("Truck" + posTruck);
+        System.out.println("Truck" + posTruck);*/
         createTruckCrane();
         
     }
@@ -76,7 +76,7 @@ public class TruckCrane {
         crane.setMaterial(mat);
         //crane.scale(2.5f);
         //System.out.println(spawnLoc);
-        crane.setLocalTranslation(new Vector3f(spawnLoc.x,spawnLoc.y-15,spawnLoc.z));
+        crane.setLocalTranslation(new Vector3f(spawnLoc.x,spawnLoc.y-12.5f,spawnLoc.z));
         
        /* Quaternion pitch90 = new Quaternion();
         pitch90.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
@@ -97,9 +97,9 @@ public class TruckCrane {
     public void setContainerLoc(){
         if(container != null)
             container.containerNode.setLocalTranslation(
-                new Vector3f(spawnLoc.x,
+                new Vector3f(spawnLoc.x ,
                     truckCraneNode.getLocalTranslation().y - 7.5f,
-                    truckCraneNode.getLocalTranslation().z));
+                    truckCraneNode.getLocalTranslation().z + spawnLoc.z));
            
     }
     public void addContainer(Container container)
@@ -126,13 +126,15 @@ public class TruckCrane {
     
     // Motion path
     public void setMotion(int status){ // status 1 agv -> truck // status 2 truck -> agv
+        
+        
         path = new MotionPath();
         
-            path.addWayPoint(new Vector3f(0, spawnLoc.y, posAGV.z));
-            path.addWayPoint(new Vector3f(0, spawnLoc.y, posTruck.z +5)); // + 5f));
-            path.addWayPoint(new Vector3f(0, spawnLoc.y, posAGV.z));
+            path.addWayPoint(new Vector3f(0, spawnLoc.y, 17));
+            path.addWayPoint(new Vector3f(0, spawnLoc.y, - 12)); // + 5f));
+            path.addWayPoint(new Vector3f(0, spawnLoc.y, 17));
             
-        path.enableDebugShape(assetManager, rootNode);
+        //path.enableDebugShape(assetManager, rootNode);
         
         motionControl = new MotionEvent(truckCraneNode,path);
         
@@ -140,7 +142,7 @@ public class TruckCrane {
        // motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
         motionControl.setInitialDuration(10f);
         motionControl.setSpeed(2f);   
-        
+        //rootNode.updateGeometricState(); // fix??
         
         path.setCycle(false);
         if(status == 2 && agv != null && agv.container != null){

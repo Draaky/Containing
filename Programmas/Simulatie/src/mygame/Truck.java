@@ -89,7 +89,7 @@ public class Truck {
         truck.attachChild(wheel3);
         truck.attachChild(wheel4);
         truckNode = GeometryBatchFactory.optimize(truck, true);
-        //truckNode.scale(0.5f);
+        truckNode.scale(0.5f);
         rootNode.attachChild(truckNode);
     }    
     public void addContainer(Container container)
@@ -107,8 +107,8 @@ public class Truck {
         if(container != null)
             container.containerNode.setLocalTranslation(
                 truckNode.getLocalTranslation().x,
-                truckNode.getLocalTranslation().y + 3.5f,
-                truckNode.getLocalTranslation().z + 3f);
+                truckNode.getLocalTranslation().y + 1.75f,
+                truckNode.getLocalTranslation().z + 1.5f);
     }
     public void arrived(){
         container.isMoving = false;
