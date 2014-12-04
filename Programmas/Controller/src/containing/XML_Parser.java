@@ -23,7 +23,7 @@ public class XML_Parser {
    {
     try {
         //opening the xml file
-	File fXmlFile = new File("E:\\School\\Github\\Containing\\XML\\XML\\xml7.xml");
+	File fXmlFile = new File("C:\\Users\\Janco\\Documents\\InformaticaJaar2\\Containing\\XML\\XML\\xml7.xml");
 	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	Document doc = dBuilder.parse(fXmlFile);
