@@ -21,6 +21,7 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture2D;
+import com.jme3.ui.Picture;
 import com.jme3.water.WaterFilter;
 import java.util.LinkedList;
 
@@ -73,12 +74,11 @@ public class Main extends SimpleApplication {
         
         //initFloor();// create floor.
         
-        //Jos`// fix  not working as intended.
-        //synchronized(this) {
+        //Jos`
             initPPcWater();
             initScene();
-            //initInputs();
-        //}
+            Interface();
+                    
         Platform p = new Platform(rootNode, assetManager);  // place the floor
         
         // spawn 10 trucks, agv's and trucks.
@@ -259,6 +259,24 @@ public class Main extends SimpleApplication {
       };
     inputManager.addListener(AL, "shoot");  
    };
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Interface">   
+    public void Interface(){
+        setDisplayStatView(false); setDisplayFps(false);
+        Picture pic = new Picture("HUD Picture");
+        pic.setImage(assetManager, "Textures/nhl.png", true);
+        pic.setWidth(settings.getWidth()/5);
+        pic.setHeight(settings.getHeight()/5);
+        pic.setPosition(0f,20f);
+        
+        Picture pic2 = new Picture("HUD Picture");
+        pic2.setImage(assetManager, "Textures/groep5.png", true);
+        pic2.setWidth(settings.getWidth()/5);
+        pic2.setHeight(settings.getHeight()/3);
+        pic2.setPosition(settings.getWidth()/1.25f, settings.getHeight()/1.5f);
+        guiNode.attachChild(pic);
+        guiNode.attachChild(pic2);
+    }
     // </editor-fold>
     @Override
     public void simpleUpdate(float tpf) {
