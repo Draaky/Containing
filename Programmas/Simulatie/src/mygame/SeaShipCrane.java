@@ -26,6 +26,10 @@ import mygame.Truck;
  *
  * @author Pieter
  */
+
+    /*
+     * WORK IN PROGRESS.
+     */
 public class SeaShipCrane {
     
     public Node rootNode;

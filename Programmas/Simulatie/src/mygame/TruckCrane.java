@@ -39,7 +39,6 @@ public class TruckCrane {
     private boolean active = true;
     private MotionPath path;
     private MotionEvent motionControl;
-    private MotionEvent motionControlContainer;
     private Vector3f spawnLoc;
     private Vector3f posTruck;
     private Vector3f posAGV;
@@ -48,23 +47,16 @@ public class TruckCrane {
     {
         this.rootNode = rootNode;
         this.assetManager = assetManager;
-        
-        
         container = null;   // container
         truck = null;
         agv = null;
-        this.spawnLoc = spawnLoc;
-        posTruck = new Vector3f(spawnLoc.x , spawnLoc.y - 11.45f, spawnLoc.z - 17);
-        posAGV  = new Vector3f(spawnLoc.x, spawnLoc.y - 11.45f, spawnLoc.z + 17);
-        
-        /*System.out.println("spawn" + spawnLoc);
-        System.out.println("AGV" + posAGV);
-        System.out.println("Truck" + posTruck);*/
+        this.spawnLoc = spawnLoc;                                                   // set location of crane model.
+        posTruck = new Vector3f(spawnLoc.x , spawnLoc.y - 11.45f, spawnLoc.z - 17); // set location of truck
+        posAGV  = new Vector3f(spawnLoc.x, spawnLoc.y - 11.45f, spawnLoc.z + 17);   // set location of agv
         createTruckCrane();
-        
     }
     
-    private void createTruckCrane()
+    private void createTruckCrane() 
     {
         Material mat2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat2.setColor("Color", ColorRGBA.Yellow);
@@ -75,26 +67,14 @@ public class TruckCrane {
         Spatial crane = assetManager.loadModel("Models/truckcrane/crane.j3o");
         crane.setMaterial(mat);
         //crane.scale(2.5f);
-        //System.out.println(spawnLoc);
-        crane.setLocalTranslation(new Vector3f(spawnLoc.x,spawnLoc.y-12.5f,spawnLoc.z));
-        
-       /* Quaternion pitch90 = new Quaternion();
-        pitch90.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
-        crane.rotate(pitch90);*/
-        
-        //Cylinder w = new Cylinder(20, 50, 2, 1, true);
-        /*Geometry superMagnet = new Geometry("magnet", w);
-        superMagnet.rotate((float)(0.5*Math.PI),0,0);
-        superMagnet.move(posAGV.x, posAGV.y + 11.5f, posAGV.z);
-        
-        superMagnet.setMaterial(mat2);*/
+        crane.setLocalTranslation(new Vector3f(spawnLoc.x,spawnLoc.y-12.5f,spawnLoc.z));    // place the model at this spot.
 
         //add parts to node.
         truckCraneNode.attachChild(crane);
         //truckCraneNode.attachChild(superMagnet);
         rootNode.attachChild(truckCraneNode);
     }
-    public void setContainerLoc(){
+    public void setContainerLoc(){ // set the container at the correct location in the world.
         if(container != null)
             container.containerNode.setLocalTranslation(
                 new Vector3f(spawnLoc.x ,
@@ -102,24 +82,24 @@ public class TruckCrane {
                     truckCraneNode.getLocalTranslation().z + spawnLoc.z));
            
     }
-    public void addContainer(Container container)
+    public void addContainer(Container container)   // give container to Crane.
     {
         //System.out.println("CRANE HAS CONTAINER");
         this.container = container;   
     }
-    public Container removeContainer()
+    public Container removeContainer() // remove the container from crane.
     {
         //System.out.println("CRANE HAS LOST A CONTAINER");
         Container result = container;  //save container in new value;
         container = null;              //clean container.
         return result;
     }
-    public void setTruck(Truck truck){
+    public void setTruck(Truck truck){ // give truck to crane. 
         this.truck = truck;
         truck.truckNode.setLocalTranslation(posTruck);
     }
     
-    public void setAGV(AGV agv){
+    public void setAGV(AGV agv){ // give agv to crane.
         this.agv = agv;
         agv.agvNode.setLocalTranslation(posAGV);
     }
@@ -197,12 +177,10 @@ public class TruckCrane {
         });
         }
     }
-    // play the Motion Path
-    public void playMotion() {
+    public void playMotion() { // play the Motion Path
         motionControl.play();
     }
-    //Show the motion path.
-    public void showMotion(){
+    public void showMotion(){//Show the motion path.
         
         if (active) {
             active = false;

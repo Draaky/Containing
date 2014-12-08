@@ -25,6 +25,8 @@ import com.jme3.water.WaterFilter;
  *
  * @author Jos
  */
+
+/*           DONE                */
 public class Platform extends Node {
     
     public Node rootNode;

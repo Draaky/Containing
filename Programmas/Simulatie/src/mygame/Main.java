@@ -21,6 +21,7 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture2D;
+import com.jme3.ui.Picture;
 import com.jme3.water.WaterFilter;
 import java.util.LinkedList;
 
@@ -33,9 +34,8 @@ public class Main extends SimpleApplication {
         settings.setTitle("Containing");
         settings.setSettingsDialogImage("/Interface/containing.jpg");
         app.setSettings(settings);
-        
         app.start();
-        // Create Client.
+        // Create Client. That gets the commands from Controller.
         Thread EchoClientSimmulator = new Thread(){
            public void run(){
                EchoClient.main(args);
@@ -68,22 +68,18 @@ public class Main extends SimpleApplication {
         viewPort.setBackgroundColor(ColorRGBA.LightGray);
         flyCam.setMoveSpeed(150);
         flyCam.setRotationSpeed(10f);
-        cam.setLocation(new Vector3f(10f,20f,-35f));
-        cam.setFrustumFar(9000);
-        cam.onFrameChange();
+        cam.setLocation(new Vector3f(10f,20f,-35f)); // set cam location
+        cam.setFrustumFar(9000);    // set how far cam can see
+        cam.onFrameChange();       
         
-        // create floor.
-        //initFloor();
+        //initFloor();// create floor.
         
-        //Jos
-        synchronized(this) {
+        //Jos`
             initPPcWater();
             initScene();
-        }
-        //initInputs();
-        
-        Platform p = new Platform(rootNode, assetManager);
-        
+            Interface();
+                    
+        Platform p = new Platform(rootNode, assetManager);  // place the floor
         
         // spawn 10 trucks, agv's and trucks.
         for(int i = 0; i < 10; i++)
@@ -112,8 +108,7 @@ public class Main extends SimpleApplication {
         
         seaShipCraneList.add( new SeaShipCrane(this.rootNode, this.assetManager, 
                            new Vector3f(-100,0,0)));*/
-        
-        
+        // spawn new bargeships
         for(int i = 0; i < 2; i++)
         {
             bList.add(new BargeShip(rootNode, assetManager));           
@@ -127,23 +122,22 @@ public class Main extends SimpleApplication {
             x1 += 400f; 
         }        
        
-        s = new SeaShip(rootNode, assetManager);
-        
-        
-       // input commands for testing use.
+        s = new SeaShip(rootNode, assetManager); // spawn a big ship.
+        //s.rootNode.
+       /*// input commands for testing use.
        inputManager.addMapping("shoot", 
                new MouseButtonTrigger(MouseInput.BUTTON_LEFT) );
        
        inputManager.addMapping("play", 
        new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-       inputManager.addListener(actionListener, "shoot", "play");
+       inputManager.addListener(actionListener, "shoot", "play");*/
        
         
        // useCommand("tc 2 1");
         
-        // <editor-fold defaultstate="collapsed" desc="Thread">
+       // <editor-fold defaultstate="collapsed" desc="Thread">
        // Thread  for using commands 
-        Thread thread;
+       /* Thread thread;
         thread = new Thread(){
             @Override
             public void run(){
@@ -161,7 +155,7 @@ public class Main extends SimpleApplication {
                 }
             }
         };
-        thread.start();
+        thread.start();*/
        // </editor-fold>
     }
     // <editor-fold defaultstate="collapsed" desc="Platformen eromheen">
@@ -266,9 +260,33 @@ public class Main extends SimpleApplication {
     inputManager.addListener(AL, "shoot");  
    };
     // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Interface">   
+    public void Interface(){
+        setDisplayStatView(false); setDisplayFps(false);
+        Picture pic = new Picture("HUD Picture");
+        pic.setImage(assetManager, "Textures/nhl.png", true);
+        pic.setWidth(settings.getWidth()/5);
+        pic.setHeight(settings.getHeight()/5);
+        pic.setPosition(0f,20f);
+        
+        Picture pic2 = new Picture("HUD Picture");
+        pic2.setImage(assetManager, "Textures/groep5.png", true);
+        pic2.setWidth(settings.getWidth()/5);
+        pic2.setHeight(settings.getHeight()/3);
+        pic2.setPosition(settings.getWidth()/1.25f, settings.getHeight()/1.5f);
+        guiNode.attachChild(pic);
+        guiNode.attachChild(pic2);
+    }
+    // </editor-fold>
     @Override
     public void simpleUpdate(float tpf) {
         //TODO: add update code
+        while (!inputBuffer.isEmpty())
+        {
+            System.out.println("pop" + inputBuffer.getFirst());
+            useCommand(inputBuffer.pop());
+        }
+        
         
         for(AGV agv : AGVList)
         {
@@ -291,6 +309,7 @@ public class Main extends SimpleApplication {
             ssc.moveMagnet();
         }
     }
+    // Get a string convert it to a command.
     public void useCommand(String command){
         
         String[] parts = command.split(" ");
@@ -349,7 +368,8 @@ public class Main extends SimpleApplication {
         //else
            // System.out.println("Invalid String : size = " + parts.length + ", must be 3");
     }
-    private ActionListener actionListener = new ActionListener() {
+    
+    /*private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
           if (name.equals("play") && !keyPressed) {
               
@@ -368,14 +388,9 @@ public class Main extends SimpleApplication {
                       truckC.setMotion(2);
                       truckC.playMotion();
                 }
-              /*System.out.println(inputBuffer.size());
-              for(String line: inputBuffer)
-              {
-                  System.out.println("comand : " + line);
-              }*/
             }
         }
-    };
+    };*/
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code

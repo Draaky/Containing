@@ -43,7 +43,9 @@ public class ShipCrane {
     Vector3f spawnLoc;
     Vector3f posShip;
     Vector3f posAGV;
-    
+    /*
+     * WORK IN PROGRESS.
+     */
     
     public ShipCrane(Node rootNode, AssetManager assetManager, Vector3f spawnLoc)
     {

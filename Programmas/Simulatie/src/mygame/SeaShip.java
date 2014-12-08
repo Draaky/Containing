@@ -25,6 +25,8 @@ import jme3tools.optimize.GeometryBatchFactory;
  *
  * @author Jos
  */
+/*      WORK IN PROGRESS        */
+
 public class SeaShip {
     
     Node rootNode;
@@ -51,6 +53,7 @@ public class SeaShip {
         s.setLocalTranslation(880f, -
                 
                 15.1f, 15f);
+       
         // You must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));

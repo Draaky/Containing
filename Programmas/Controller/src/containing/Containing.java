@@ -124,7 +124,7 @@ public class Containing extends Thread {
         sleep (1000);
         EchoClient.os.println(" tcAddTruck 1 2");
         EchoClient.os.println(" tcAddAGV 1 2");
-        EchoClient.os.println(" tc 1 1");
+        EchoClient.os.println(" tc 1 2");
         
         
     //EchoServer ES = new EchoServer("Localhost");
