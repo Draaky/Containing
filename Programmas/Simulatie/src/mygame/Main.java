@@ -51,6 +51,7 @@ public class Main extends SimpleApplication {
     ArrayList<SeaShipCrane> seaShipCraneList = new ArrayList<SeaShipCrane>();
     ArrayList<Container> containerList = new ArrayList<Container>();
     ArrayList<AGV> AGVList = new ArrayList<AGV>();
+    ArrayList<StorageCrane> StorageCraneList = new ArrayList<StorageCrane>();
     Box    floor;
     Quaternion pitch90 = new Quaternion();
     
@@ -89,7 +90,7 @@ public class Main extends SimpleApplication {
             truckList.get(i).addContainer(containerList.get(i));
             AGVList.add(new AGV(this.rootNode, this.assetManager));
             
-            truckList.get(i).truckNode.setLocalTranslation(-150+(10*i), - 11.45f, 150);
+            truckList.get(i).truckNode.setLocalTranslation(-800 - (i*5),- 11.45f,-360);
             AGVList.get(i).agvNode.setLocalTranslation(150+(10*i), - 11.45f, -150);
             
             seaShipCraneList.add(new SeaShipCrane(this.rootNode, this.assetManager, new Vector3f(875,0,350-(i*60))));
@@ -121,7 +122,11 @@ public class Main extends SimpleApplication {
             b.shipNode.setLocalTranslation(x1, 0f, z1);
             x1 += 400f; 
         }        
-       
+        for(int i = 0; i < 80; i++){
+            StorageCraneList.add(
+                    new StorageCrane(this.rootNode, this.assetManager, 
+                    new Vector3f(-797.5f+(i*9.6f),0,300)));
+        }
         s = new SeaShip(rootNode, assetManager); // spawn a big ship.
         //s.rootNode.
        /*// input commands for testing use.

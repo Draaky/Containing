@@ -56,8 +56,8 @@ public class ShipCrane {
         agv = null;
         this.spawnLoc = spawnLoc;
         
-        magnetPos = new Vector3f(spawnLoc.x , spawnLoc.y + 23.5f, spawnLoc.z +60f );
-        posAGV  = new Vector3f(magnetPos.x, 0f, magnetPos.z);
+        this.magnetPos = new Vector3f(spawnLoc.x , spawnLoc.y + 23.5f, spawnLoc.z +60f );
+        this.posAGV  = new Vector3f(magnetPos.x, 0f, magnetPos.z);
         System.out.println(spawnLoc);
         System.out.println(posAGV);
         createShipCrane();
