@@ -32,9 +32,9 @@ public class TruckCrane {
     public Node truckCraneNode = new Node("truckCrane");
     public AssetManager assetManager;
     
-    Container container;
-    Truck truck;
-    AGV agv;
+    public Container container;
+    public Truck truck;
+    public AGV agv;
     
     private boolean active = true;
     private MotionPath path;

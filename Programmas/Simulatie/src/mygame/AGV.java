@@ -24,7 +24,7 @@ public class AGV {
     Node rootNode;
     Node agvNode;
     AssetManager assetManager;
-    Container container;
+    public Container container;
     
     public AGV(Node rootNode, AssetManager assetManager)
     {

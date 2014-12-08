@@ -41,8 +41,8 @@ public class ShipCrane {
     private MotionPath path;
     private MotionEvent motionControl;
     Vector3f spawnLoc;
-    Vector3f posShip;
     Vector3f posAGV;
+    Vector3f magnetPos;
     /*
      * WORK IN PROGRESS.
      */
@@ -51,21 +51,15 @@ public class ShipCrane {
     {
         this.rootNode = rootNode;
         this.assetManager = assetManager;
-        
-        
         container = null;
         truck = null;
         agv = null;
         this.spawnLoc = spawnLoc;
-        posShip = new Vector3f(spawnLoc);
-        posAGV  = new Vector3f(spawnLoc);
         
-        posAGV.z = posAGV.z - 90;
-        posShip.z += 60;
-        
+        magnetPos = new Vector3f(spawnLoc.x , spawnLoc.y + 23.5f, spawnLoc.z +60f );
+        posAGV  = new Vector3f(magnetPos.x, 0f, magnetPos.z);
         System.out.println(spawnLoc);
         System.out.println(posAGV);
-        System.out.println(posShip);
         createShipCrane();
     }
     
@@ -79,24 +73,19 @@ public class ShipCrane {
         Spatial crane = assetManager.loadModel("Models/dockingcrane/crane.j3o");
         crane.setMaterial(mat);
         crane.scale(1.5f);
+        
         crane.setLocalTranslation(new Vector3f(spawnLoc.x,spawnLoc.y-15,spawnLoc.z));
         
         Quaternion pitch90 = new Quaternion();
-        pitch90.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
+        pitch90.fromAngleAxis(FastMath.PI/2, new Vector3f(0,-1,0));
         crane.rotate(pitch90);
+        
         
         Cylinder w = new Cylinder(20, 50, 2, 1, true);
         Geometry superMagnet = new Geometry("magnet", w);
         superMagnet.rotate((float)(0.5*Math.PI),0,0);
-        superMagnet.move(posAGV.x, posAGV.y + 25, posAGV.z);
-        
+        superMagnet.setLocalTranslation(magnetPos);
         superMagnet.setMaterial(mat2);
-
-        //add parts to node.
-        //shipCraneNode.attachChild(pole1);
-        //shipCraneNode.attachChild(pole2);
-        //shipCraneNode.attachChild(beam);
-        //shipCraneNode.attachChild(rails);
         shipCraneNode.attachChild(crane);
         shipCraneNode.attachChild(superMagnet);
         rootNode.attachChild(shipCraneNode);
@@ -143,7 +132,7 @@ public class ShipCrane {
     }
     public void setTruck(Truck truck){
         this.truck = truck;
-        truck.truckNode.setLocalTranslation(posShip.x, posShip.y - 11.45f, posShip.z);
+        //truck.truckNode.setLocalTranslation(posShip.x, posShip.y - 11.45f, posShip.z);
     }
     public void giveContainer(Truck truck){
         if(truck.container == null){
@@ -157,8 +146,8 @@ public class ShipCrane {
     }
     public void setMotion(int status){
         path = new MotionPath();
-        path.addWayPoint(new Vector3f(posAGV.x, posAGV.y + 25, posAGV.z));
-        path.addWayPoint(new Vector3f(posShip.x, posShip.y + 25, posShip.z));
+        path.addWayPoint(new Vector3f(magnetPos));
+        path.addWayPoint(new Vector3f(magnetPos.x, magnetPos.y, magnetPos.z - 60));
         path.enableDebugShape(assetManager, rootNode);
         
         motionControl = new MotionEvent(shipCraneNode.getChild("magnet"),path);

@@ -88,26 +88,26 @@ public class Main extends SimpleApplication {
             truckList.add( new Truck(this.rootNode, this.assetManager));
             truckList.get(i).addContainer(containerList.get(i));
             AGVList.add(new AGV(this.rootNode, this.assetManager));
+            
+            truckList.get(i).truckNode.setLocalTranslation(-150+(10*i), - 11.45f, 150);
+            AGVList.get(i).agvNode.setLocalTranslation(150+(10*i), - 11.45f, -150);
+            
+            seaShipCraneList.add(new SeaShipCrane(this.rootNode, this.assetManager, new Vector3f(875,0,350-(i*60))));
+            
+        }
+        for(int i = 0; i < 8; i++){
+        if(shipCraneList.size() < 4)
+                shipCraneList.add(new ShipCrane(this.rootNode, this.assetManager, new Vector3f(680-(i*60),0,-450)));
+            else
+                shipCraneList.add(new ShipCrane(this.rootNode, this.assetManager, new Vector3f(680-((i*60)+170),0,-450)));
         }
         // spawn 10 truckcranes. Place AGV's and trucks at a location.
-        for(int k=0; k < 10;k++)
+        for(int k=0; k < 20;k++)
         {
             truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
                            new Vector3f(-80 - (k*20),0,-400)));
-            /*truckCraneList.get(k).setAGV(AGVList.get(k));
-            truckCraneList.get(k).setTruck(truckList.get(k));*/
-            truckList.get(k).truckNode.setLocalTranslation(-150+(10*k), - 11.45f, 150);
-            AGVList.get(k).agvNode.setLocalTranslation(150+(10*k), - 11.45f, -150);
-            //useCommand("tc " + k + " 1");
         }
-        /*truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
-                           new Vector3f(0,0,0)));
         
-       /* shipCraneList.add( new ShipCrane(this.rootNode, this.assetManager, 
-                           new Vector3f(100,0,0)));
-        
-        seaShipCraneList.add( new SeaShipCrane(this.rootNode, this.assetManager, 
-                           new Vector3f(-100,0,0)));*/
         // spawn new bargeships
         for(int i = 0; i < 2; i++)
         {
@@ -326,7 +326,7 @@ public class Main extends SimpleApplication {
             if(cmd.equals("tc")) // TruckCrane 
             {
                 try{
-                    System.out.println(truckCraneList.get(id));
+                   // System.out.println(truckCraneList.get(id));
                     truckCraneList.get(id).setMotion(action);
                     truckCraneList.get(id).playMotion();
                 }
@@ -335,7 +335,7 @@ public class Main extends SimpleApplication {
             else if(cmd.equals("sc")) // ShipCrane
             {
                 try{
-                    System.out.println(shipCraneList.get(id));
+                   // System.out.println(shipCraneList.get(id));
                     shipCraneList.get(id).setMotion(action);
                     shipCraneList.get(id).playMotion();
                 }
@@ -344,7 +344,7 @@ public class Main extends SimpleApplication {
             else if(cmd.equals("ssc")) // SeaShipCrane
             {
                 try{
-                    System.out.println(seaShipCraneList.get(id));
+                    //System.out.println(seaShipCraneList.get(id));
                     seaShipCraneList.get(id).setMotion(action);
                     seaShipCraneList.get(id).playMotion();
                 }
@@ -352,14 +352,14 @@ public class Main extends SimpleApplication {
             }
             else if(cmd.equals("tcAddTruck")){
                 try{
-                    System.out.println(truckList.get(action));
+                   // System.out.println(truckList.get(action));
                     truckCraneList.get(id).setTruck(truckList.get(action));
                 }
                 catch(Exception e){System.out.println(e);}
             }
             else if(cmd.equals("tcAddAGV")){
                 try{
-                    System.out.println(AGVList.get(action));
+                  //  System.out.println(AGVList.get(action));
                     truckCraneList.get(id).setAGV(AGVList.get(action));
                 }
                 catch(Exception e){System.out.println(e);}
