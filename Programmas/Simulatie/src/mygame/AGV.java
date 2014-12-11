@@ -76,6 +76,7 @@ public class AGV {
         agv.attachChild(wheel3);
         agv.attachChild(wheel4);
         agvNode = GeometryBatchFactory.optimize(agv, true);
+        agvNode.scale(0.5f);
         rootNode.attachChild(agvNode);
     }    
     public void addContainer(Container container)
@@ -94,8 +95,8 @@ public class AGV {
         if(container != null)
             container.containerNode.setLocalTranslation(
                 agvNode.getLocalTranslation().x,
-                agvNode.getLocalTranslation().y + 3.5f,
-                agvNode.getLocalTranslation().z + 3f);
+                agvNode.getLocalTranslation().y + 1.75f,
+                agvNode.getLocalTranslation().z + 1.5f);
     }
     public void arrived(){
         container.isMoving = false;

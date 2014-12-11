@@ -89,31 +89,32 @@ public class Truck {
         truck.attachChild(wheel3);
         truck.attachChild(wheel4);
         truckNode = GeometryBatchFactory.optimize(truck, true);
+        truckNode.scale(0.5f);
         rootNode.attachChild(truckNode);
     }    
-    public void addContainer(Container container)
+    public void addContainer(Container container) // add container to crane.
     {
         System.out.println("TRUCK HAS CONTAIENR");
         this.container = container;  
     }
-    public Container removeContainer()
+    public Container removeContainer()                  // remove container from crane.
     {
         Container result = container;  //save container in new value;
         container = null;              //clean container.
         return result;
     }
-    public void move(){
+    public void move(){                 // move the container.
         if(container != null)
             container.containerNode.setLocalTranslation(
                 truckNode.getLocalTranslation().x,
-                truckNode.getLocalTranslation().y + 3.5f,
-                truckNode.getLocalTranslation().z + 3f);
+                truckNode.getLocalTranslation().y + 1.75f,
+                truckNode.getLocalTranslation().z + 1.5f);
     }
     public void arrived(){
         container.isMoving = false;
         container = null;
     }
-    public void setMotion(){
+    public void setMotion(){                    // set motion path.
         path = new MotionPath();
         path.addWayPoint(new Vector3f(10, 3, 0));
         path.addWayPoint(new Vector3f(10, 3, 10));
@@ -134,7 +135,6 @@ public class Truck {
         
     }
     public void playMotion() {
-        
         if (playing) {
             playing = false;
             motionControl.stop();
@@ -142,10 +142,8 @@ public class Truck {
             playing = true;
             motionControl.play();
         }
-        
     }
     public void showMotion(){
-        
         if (active) {
             active = false;
             path.disableDebugShape();

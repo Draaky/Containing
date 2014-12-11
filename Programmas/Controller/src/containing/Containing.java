@@ -35,10 +35,8 @@ public class Containing extends Thread {
     public static void main(final String[] args) throws Exception {
         // TODO code application logic here
        
-    
-       
-       
-       
+        //EchoServer server = new EchoServer();
+        //sleep(1000);
        
        Thread EchoClientController = new Thread(){
            public void run(){
@@ -126,7 +124,7 @@ public class Containing extends Thread {
         sleep (1000);
         EchoClient.os.println(" tcAddTruck 1 2");
         EchoClient.os.println(" tcAddAGV 1 2");
-        EchoClient.os.println(" tc 1 1");
+        EchoClient.os.println(" tc 1 2");
         
         
     //EchoServer ES = new EchoServer("Localhost");

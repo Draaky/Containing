@@ -1,6 +1,7 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.input.KeyInput;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -10,19 +11,32 @@ import com.jme3.scene.shape.Box;
 import java.util.ArrayList;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
+import com.jme3.light.PointLight;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.scene.Spatial;
+import com.jme3.system.AppSettings;
+import com.jme3.texture.Texture2D;
+import com.jme3.ui.Picture;
+import com.jme3.water.WaterFilter;
 import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Main extends SimpleApplication {
-
+    
     public static void main(final String[] args) {
         Main app = new Main();
+        AppSettings settings = new AppSettings(false);
+        settings.setFullscreen(false);
+        settings.setTitle("Containing");
+        settings.setSettingsDialogImage("/Interface/containing.jpg");
+        app.setSettings(settings);
         app.start();
-        // Create Client.
+        // Create Client. That gets the commands from Controller.
         Thread EchoClientSimmulator = new Thread(){
            public void run(){
                EchoClient.main(args);
@@ -41,17 +55,39 @@ public class Main extends SimpleApplication {
     Box    floor;
     Quaternion pitch90 = new Quaternion();
     
+    // JOS
+    Spatial scene;
+    FilterPostProcessor fpp;
+    private WaterFilter water;  
+    public ArrayList<Container> contList = new ArrayList<Container>();
+    ArrayList<BargeShip> bList = new ArrayList<BargeShip>();
+    SeaShip s;
+    Train train;
+    Train [] wagons = new Train[35];
+    //universele schaal
+    public static final float Scale = 2f;
+    Container shipcontainers[][][] = new Container[20][6][16];
+    
     @Override
     public void simpleInitApp() {
         viewPort.setBackgroundColor(ColorRGBA.LightGray);
-        flyCam.setMoveSpeed(100);
+        flyCam.setMoveSpeed(150);
         flyCam.setRotationSpeed(10f);
-        //cam.setLocation(new Vector3f(10f,20f,-35f));
+        cam.setLocation(new Vector3f(10f,20f,-35f)); // set cam location
+        cam.setFrustumFar(9000);    // set how far cam can see
+        cam.onFrameChange();       
         
-        // create floor.
-        initFloor();
+        //initFloor();// create floor.
         
-        // spawn 10 trucks, agv's and trucks.
+        //Jos`
+        initPPcWater();
+        initScene();
+        Interface();
+        initLight();
+                    
+        Platform p = new Platform(rootNode, assetManager);  // place the floor
+        
+        // spawn 10 trucks, agvs and trucks.
         for(int i = 0; i < 10; i++)
         {
             containerList.add( new Container(this.rootNode, this.assetManager));
@@ -59,16 +95,18 @@ public class Main extends SimpleApplication {
             truckList.get(i).addContainer(containerList.get(i));
             AGVList.add(new AGV(this.rootNode, this.assetManager));
         }
-        // spawn 10 truckcranes. Place AGV's and trucks at a location.
+        
+        // spawn 10 truckcranes. Place AGVs and trucks at a location.
         for(int k=0; k < 10;k++)
         {
             truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
-                           new Vector3f(20*(k+1),0,0)));
+                           new Vector3f(-80 - (k*20),0,-400)));
             /*truckCraneList.get(k).setAGV(AGVList.get(k));
             truckCraneList.get(k).setTruck(truckList.get(k));*/
             truckList.get(k).truckNode.setLocalTranslation(-150+(10*k), - 11.45f, 150);
             AGVList.get(k).agvNode.setLocalTranslation(150+(10*k), - 11.45f, -150);
             //useCommand("tc " + k + " 1");
+            seaShipCraneList.add(new SeaShipCrane(this.rootNode, this.assetManager, new Vector3f(750,0,100-(k*35))));
         }
         /*truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
                            new Vector3f(0,0,0)));
@@ -79,20 +117,38 @@ public class Main extends SimpleApplication {
         seaShipCraneList.add( new SeaShipCrane(this.rootNode, this.assetManager, 
                            new Vector3f(-100,0,0)));*/
         
-       // input commands for testing use.
+        // spawn new bargeships
+        for(int i = 0; i < 2; i++)
+        {
+            bList.add(new BargeShip(rootNode, assetManager));           
+        }
+        float x1 = 0f;
+        float z1 = 0;
+
+        for (BargeShip b : bList)
+        {
+            b.shipNode.setLocalTranslation(x1, 0f, z1);
+            x1 += 400f; 
+        }        
+       
+        s = new SeaShip(rootNode, assetManager); // spawn a big ship
+        newTrain(20);
+        
+        //s.rootNode.
+       /*// input commands for testing use.
        inputManager.addMapping("shoot", 
                new MouseButtonTrigger(MouseInput.BUTTON_LEFT) );
        
        inputManager.addMapping("play", 
        new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-       inputManager.addListener(actionListener, "shoot", "play");
+       inputManager.addListener(actionListener, "shoot", "play");*/
        
         
        // useCommand("tc 2 1");
         
-       
+       // <editor-fold defaultstate="collapsed" desc="Thread">
        // Thread  for using commands 
-        Thread thread;
+       /* Thread thread;
         thread = new Thread(){
             @Override
             public void run(){
@@ -100,7 +156,7 @@ public class Main extends SimpleApplication {
                 while(true){
                     if (!inputBuffer.isEmpty())
                     {
-                        System.out.println("pop");
+                        System.out.println("pop" + inputBuffer.getFirst());
                         useCommand(inputBuffer.pop());
                     }
                     else{
@@ -110,20 +166,150 @@ public class Main extends SimpleApplication {
                 }
             }
         };
-        thread.start();
+        thread.start();*/
+       // </editor-fold>
     }
-    public void initFloor() {
-        Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");  
-        floor = new Box(600f, 0.1f, 19.2f);
+    // <editor-fold defaultstate="collapsed" desc="Platformen eromheen">
+    private void TreinPlatform(){
+        Box platform = new Box(534f, 30f, 1107f);
         
-        Geometry floor_geo = new Geometry("Floor", floor);
-        floor_geo.setMaterial(floor_mat);
-        floor_geo.setLocalTranslation(0, -15f, 0);
-        this.rootNode.attachChild(floor_geo);
-  }
+        Geometry p = new Geometry("platform", platform);
+        Material plat_mat;
+        plat_mat = new Material (assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        p.setMaterial(plat_mat);
+        p.setLocalTranslation(0, -15f, 1326f);
+        plat_mat.setColor("Color", ColorRGBA.LightGray);
+        this.rootNode.attachChild(p);
+    }
+    
+    private void AchterPlatform(){
+        Box platform = new Box(1107f, 30f, 1534);
+        
+        Geometry p = new Geometry("platform", platform);
+        Material plat_mat;
+        plat_mat = new Material (assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        p.setMaterial(plat_mat);
+        p.setLocalTranslation(-1641f, -15f, 213f);
+        plat_mat.setColor("Color", ColorRGBA.LightGray);
+        this.rootNode.attachChild(p);
+    }
+        
+    private void VrachtwagenPlatform(){
+        Box platform = new Box(267f, 30f, 50f);
+        
+        Geometry p = new Geometry("platform", platform);
+        Material plat_mat;
+        plat_mat = new Material (assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        p.setMaterial(plat_mat);
+        p.setLocalTranslation(-300f, -15f, -271f);
+        plat_mat.setColor("Color", ColorRGBA.LightGray);
+        this.rootNode.attachChild(p);
+    }
+    // </editor-fold>     
+    // <editor-fold defaultstate="collapsed" desc="Lichten">
+        private void initLight()
+    {
+        AmbientLight ambient = new AmbientLight();
+        ambient.setColor(ColorRGBA.White);
+        rootNode.addLight(ambient); 
+
+        PointLight lamp = new PointLight();
+        lamp.setPosition(Vector3f.ZERO);
+        lamp.setColor(ColorRGBA.White);
+        lamp.setRadius(4000f);
+        lamp.setPosition(new Vector3f(1,1150,1));
+        rootNode.addLight(lamp); 
+        
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
+        sun.setColor(ColorRGBA.White);
+        rootNode.addLight(sun); 
+    }    
+    //</editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Scene">
+    private void initScene(){
+        scene = assetManager.loadModel("Scenes/Scene.j3o");
+        rootNode.attachChild(scene);
+    }
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Water">
+    public void initPPcWater()
+    { 
+        fpp = new FilterPostProcessor(assetManager); 
+        water = new WaterFilter(rootNode, new Vector3f (-4f,-1f,5f)); 
+        water.setCenter(Vector3f.ZERO); 
+        water.setRadius(260000000); 
+        water.setWaveScale(0.012f); 
+        water.setMaxAmplitude(2f); //0.5 
+        water.setFoamExistence(new Vector3f(1f, 4f, 0.5f)); 
+        water.setFoamTexture((Texture2D) assetManager.loadTexture("Common/MatDefs/Water/Textures/foam.jpg")); 
+        water.setRefractionStrength(0.2f);
+        water.setWaterHeight(-20f); 
+        fpp.addFilter(water); 
+        viewPort.addProcessor(fpp); 
+    }
+    
+    //</editor-fold>    
+    // <editor-fold defaultstate="collapsed" desc="InitInputs">
+    public void initInputs(){
+        inputManager.addMapping("shoot", 
+        new KeyTrigger(KeyInput.KEY_P));
+        ActionListener AL = new ActionListener() {
+        public void onAction(String name, boolean keyPressed, float tpf) {
+          if (name.equals("shoot") && keyPressed) {
+              System.out.println("Start ship"); 
+                 s.setMotion();
+                 s.playMotion();   
+                   for (BargeShip b : bList){
+                    b.setMotion();
+                    b.playMotion();
+                   }
+          }
+        }
+      };
+    inputManager.addListener(AL, "shoot");  
+   };
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Interface">   
+    public void Interface(){
+        setDisplayStatView(false); setDisplayFps(false);
+        Picture pic = new Picture("HUD Picture");
+        pic.setImage(assetManager, "Textures/nhl.png", true);
+        pic.setWidth(settings.getWidth()/5);
+        pic.setHeight(settings.getHeight()/5);
+        pic.setPosition(0f,20f);
+        
+        Picture pic2 = new Picture("HUD Picture");
+        pic2.setImage(assetManager, "Textures/groep5.png", true);
+        pic2.setWidth(settings.getWidth()/5);
+        pic2.setHeight(settings.getHeight()/3);
+        pic2.setPosition(settings.getWidth()/1.25f, settings.getHeight()/1.5f);
+        guiNode.attachChild(pic);
+        guiNode.attachChild(pic2);
+    }
+    // </editor-fold>
+    
+    //Train    
+    public void newTrain(int awagon)
+    {
+        for(int i=0; i<awagon;i++)
+        {
+        train = new Train(assetManager);
+        train.setLocalTranslation((400f - (36.9f*i)), -13.5f, 410f);
+        wagons[i] = train;
+        rootNode.attachChild(wagons[i]); 
+        }
+    }
+    
     @Override
     public void simpleUpdate(float tpf) {
         //TODO: add update code
+        while (!inputBuffer.isEmpty())
+        {
+            System.out.println("pop" + inputBuffer.getFirst());
+            useCommand(inputBuffer.pop());
+        }
+        
         
         for(AGV agv : AGVList)
         {
@@ -146,6 +332,7 @@ public class Main extends SimpleApplication {
             ssc.moveMagnet();
         }
     }
+    // Get a string convert it to a command.
     public void useCommand(String command){
         
         String[] parts = command.split(" ");
@@ -204,7 +391,8 @@ public class Main extends SimpleApplication {
         //else
            // System.out.println("Invalid String : size = " + parts.length + ", must be 3");
     }
-    private ActionListener actionListener = new ActionListener() {
+    
+    /*private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
           if (name.equals("play") && !keyPressed) {
               
@@ -218,19 +406,14 @@ public class Main extends SimpleApplication {
           }
           if (name.equals("shoot") && !keyPressed) {
                 //System.out.println("START AGV Truck");
-               /* for(TruckCrane truckC : truckCraneList)
+                for(TruckCrane truckC : truckCraneList)
                 {
                       truckC.setMotion(2);
                       truckC.playMotion();
-                }*/
-              System.out.println(inputBuffer.size());
-              for(String line: inputBuffer)
-              {
-                  System.out.println("comand : " + line);
-              }
+                }
             }
         }
-    };
+    };*/
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code

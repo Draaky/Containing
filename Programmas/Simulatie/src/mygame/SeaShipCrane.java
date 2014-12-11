@@ -26,6 +26,10 @@ import mygame.Truck;
  *
  * @author Pieter
  */
+
+    /*
+     * WORK IN PROGRESS.
+     */
 public class SeaShipCrane {
     
     public Node rootNode;
@@ -49,6 +53,7 @@ public class SeaShipCrane {
     {
         this.rootNode = rootNode;
         this.assetManager = assetManager;
+        
         
         container = null;
         truck = null;
@@ -79,9 +84,9 @@ public class SeaShipCrane {
         
         crane.setLocalTranslation(new Vector3f(spawnLoc.x,spawnLoc.y-15,spawnLoc.z));
         
-        Quaternion pitch90 = new Quaternion();
-        pitch90.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
-        crane.rotate(pitch90);
+//        Quaternion pitch90 = new Quaternion();
+//        pitch90.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
+//        crane.rotate(pitch90);
         
         Cylinder w = new Cylinder(20, 50, 2, 1, true);
         Geometry superMagnet = new Geometry("magnet", w);

@@ -21,7 +21,7 @@ public class Container {
     public Node rootNode;
     public Node containerNode;
     public AssetManager assetManager;
-    boolean isMoving;
+    public boolean isMoving;
     
     public Container(Node rootNode, AssetManager assetManager)
     {
@@ -41,6 +41,7 @@ public class Container {
         
         containerNode = new Node("Container");
         containerNode.attachChild(container);
+        containerNode.scale(0.5f);
         //ContainerNode = GeometryBatchFactory.optimize(containerNode, true);
         rootNode.attachChild(containerNode);
     }    
