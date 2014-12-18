@@ -40,7 +40,24 @@ public class Container {
     
         
         
+        public int getDepartureDate()
+        {
+            String year = checkDateLength((""+vdatumJ));
+            String month = checkDateLength((""+vdatumM));
+            String day = checkDateLength((""+vdatumD));
+            
+            int date = Integer.parseInt((String)("" + year + month + day));
+            return date;
+        }
         
+        public String checkDateLength(String s)
+        {
+            if(s.length() < 2)
+            {
+                s = "0"+s;
+            }
+            return s;
+        }
         
 
 }

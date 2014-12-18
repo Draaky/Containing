@@ -5,18 +5,11 @@
  */
 package containing;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import static java.lang.Thread.sleep;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Collections;
+import java.util.List;
+import org.javatuples.Triplet;
 //import static java.util.Comparator.comparing;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -151,4 +144,47 @@ public class Containing extends Thread {
         EchoClient.os.println(msg);
     }
 
+    
+    public void freerkTesting()
+    {
+        Opslag opslag = new Opslag();
+    XML_Parser X2 = new XML_Parser();
+    StorageRowNumber trw = new StorageRowNumber();
+    
+    for(Container c : X2.ZeeContainers)
+    {
+            List<Container> added = opslag.container;
+            int i = added.size();
+            Triplet newPlek = new Triplet(null, null, null);
+            System.out.println(c.vsoortvervoer);
+            
+            for (int j = 0; j < 20; j++) {
+                if(newPlek.getValue0() == null)
+                {
+                    newPlek = opslag.getStoragePosition(c, trw.returnRowNumber(c.vsoortvervoer)+j, added);
+                }
+            }
+
+              if(newPlek.getValue0() == null)
+              {
+                break;
+              }
+              
+            //System.out.println(i);
+            System.out.println("newPlek: "+newPlek);
+    }
+    
+    System.out.println(opslag.count);
+    System.out.println(opslag.container.size());
+    
+    
+        System.out.println("---------------------------------------------------");
+
+        for (int i = 0; i < 80; i++) {
+            List<Container> tempcheck = opslag.getRowList(i, opslag.container);
+            System.out.println(i+": "+tempcheck.size());
+        }
+    }
+    
+    
 }
