@@ -82,8 +82,8 @@ public class Main extends SimpleApplication {
                     
         Platform p = new Platform(rootNode, assetManager);  // place the floor
         
-        // spawn 10 trucks, agv's and trucks.
-        for(int i = 0; i < 10; i++)
+        // spawn 20 trucks, agv's and truckcranes.
+        for(int i = 0; i < 20; i++)
         {
             containerList.add( new Container(this.rootNode, this.assetManager));
             truckList.add( new Truck(this.rootNode, this.assetManager));
@@ -91,22 +91,20 @@ public class Main extends SimpleApplication {
             AGVList.add(new AGV(this.rootNode, this.assetManager));
             
             truckList.get(i).truckNode.setLocalTranslation(-800 - (i*5),- 11.45f,-360);
-            AGVList.get(i).agvNode.setLocalTranslation(150+(10*i), - 11.45f, -150);
-            
-            seaShipCraneList.add(new SeaShipCrane(this.rootNode, this.assetManager, new Vector3f(875,0,350-(i*60))));
-            
+            AGVList.get(i).agvNode.setLocalTranslation(200 - (10*i), - 11.45f, -300);
+            truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
+            new Vector3f(-80 - (i*20),0,-400)));
+        }
+        // spawn 10 seaship cranes
+        for(int i = 0; i < 10; i++)
+        {
+        seaShipCraneList.add(new SeaShipCrane(this.rootNode, this.assetManager, new Vector3f(875,0,350-(i*60))));
         }
         for(int i = 0; i < 8; i++){
         if(shipCraneList.size() < 4)
                 shipCraneList.add(new ShipCrane(this.rootNode, this.assetManager, new Vector3f(680-(i*60),0,-450)));
             else
                 shipCraneList.add(new ShipCrane(this.rootNode, this.assetManager, new Vector3f(680-((i*60)+170),0,-450)));
-        }
-        // spawn 10 truckcranes. Place AGV's and trucks at a location.
-        for(int k=0; k < 20;k++)
-        {
-            truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
-                           new Vector3f(-80 - (k*20),0,-400)));
         }
         
         // spawn new bargeships
@@ -125,17 +123,18 @@ public class Main extends SimpleApplication {
         for(int i = 0; i < 80; i++){
             StorageCraneList.add(
                     new StorageCrane(this.rootNode, this.assetManager, 
-                    new Vector3f(-797.5f+(i*9.6f),0,300)));
+                    new Vector3f(-796.55f+(i*19.25f),0,300)));
         }
         s = new SeaShip(rootNode, assetManager); // spawn a big ship.
         //s.rootNode.
-       /*// input commands for testing use.
+        
+       // input commands for testing use.
        inputManager.addMapping("shoot", 
                new MouseButtonTrigger(MouseInput.BUTTON_LEFT) );
        
        inputManager.addMapping("play", 
        new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-       inputManager.addListener(actionListener, "shoot", "play");*/
+       inputManager.addListener(actionListener, "shoot", "play");
        
         
        // useCommand("tc 2 1");
@@ -293,18 +292,18 @@ public class Main extends SimpleApplication {
         }
         
         
-        for(AGV agv : AGVList)
-        {
-            agv.move();
-        }
-        for(Truck truck : truckList)
-        {
-            truck.move();
-        }
-        for(TruckCrane tc: truckCraneList)
-        {
-            tc.setContainerLoc();
-        }
+//        for(AGV agv : AGVList)
+//        {
+//            agv.move();
+//        }
+//        for(Truck truck : truckList)
+//        {
+//            truck.move();
+//        }
+//        for(TruckCrane tc: truckCraneList)
+//        {
+//            tc.setContainerLoc();
+//        }
         for(ShipCrane sc: shipCraneList)
         {
             sc.moveMagnet();
@@ -374,28 +373,108 @@ public class Main extends SimpleApplication {
            // System.out.println("Invalid String : size = " + parts.length + ", must be 3");
     }
     
-    /*private ActionListener actionListener = new ActionListener() {
+    private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
           if (name.equals("play") && !keyPressed) {
-              
-              //System.out.println("START  Truck AGV");
-              for(TruckCrane truckC : truckCraneList)
+              for(int i = 0; i < truckList.size(); i++)
               {
-                    System.out.println("\n" +truckC.truckCraneNode.getLocalTranslation());
-                    truckC.setMotion(1);
-                    truckC.playMotion();
+              if(truckList.get(i).isArrived == true && AGVList.get(i).isArrived == true)
+              {
+                  innerloop: for(int j = 0; j < truckCraneList.size(); j ++)
+                  {
+//                    if(truckCraneList.get(j).truck == null && truckCraneList.get(j).agv == null)
+//                    {                        
+                        truckCraneList.get(i).setTruck(truckList.get(i));
+                        truckCraneList.get(i).setAGV(AGVList.get(i));
+                        if(truckList.get(i).container != null && AGVList.get(i).container == null)
+                        {
+                            truckCraneList.get(i).setMotion(1);
+                            truckCraneList.get(i).playMotion();
+                        }
+                        if(truckList.get(i).container == null && AGVList.get(i).container != null)
+                        {
+                            truckCraneList.get(i).setMotion(2);
+                            truckCraneList.get(i).playMotion();
+                        }
+                        break innerloop;                        
+//                    }
+                  }
               }
+              }
+//              truckList.get(0).setMotionTerug();
+//              truckList.get(0).playMotion();
+              //System.out.println("START  Truck AGV");
+//              for(TruckCrane truckC : truckCraneList)
+//              {
+//                    System.out.println("\n" +truckC.truckCraneNode.getLocalTranslation());
+//                    truckC.setMotion(1);
+//                    truckC.playMotion();
+//              }
           }
           if (name.equals("shoot") && !keyPressed) {
-                //System.out.println("START AGV Truck");
-                for(TruckCrane truckC : truckCraneList)
+              for(int i = 0; i < truckList.size(); i++)
+              {
+                if(truckList.get(i).isLeaving == true)
                 {
-                      truckC.setMotion(2);
-                      truckC.playMotion();
+                    truckList.get(i).setMotionTerug();
                 }
+                if(truckList.get(i).isLeaving == false)
+                {
+                    innerloop: for(int j = 0; j < truckCraneList.size(); j++)
+                    {
+                        if(truckCraneList.get(j).truck == null)
+                        {
+                            truckList.get(i).destination = new Vector3f(truckCraneList.get(j).spawnLoc.x ,
+                            truckCraneList.get(j).truckCraneNode.getLocalTranslation().y - 11.45f, truckCraneList.get(j).spawnLoc.z + 45);
+                            truckList.get(i).setMotionHeen();
+                            truckCraneList.get(j).truck = truckList.get(i);
+                            break innerloop;
+                        }
+                    }
+                }              
+                truckList.get(i).playMotion();
+                if(AGVList.get(i).idle == true && AGVList.get(i).isLeaving == false)
+                {
+                    innerloop: for(int j = 0; j < truckCraneList.size(); j++)
+                    {
+                        if(truckCraneList.get(j).agv == null)
+                        {
+                            AGVList.get(i).destination = new Vector3f(truckCraneList.get(j).spawnLoc.x ,
+                            truckCraneList.get(j).truckCraneNode.getLocalTranslation().y - 11.45f, truckCraneList.get(j).spawnLoc.z + 70);
+                            AGVList.get(i).setMotionTC();
+                            truckCraneList.get(j).agv = AGVList.get(i);
+                            AGVList.get(i).idle = false;
+                            break innerloop;
+                        }
+                    }                                      
+                }
+                if(AGVList.get(i).isLeaving == true)
+                {
+                    AGVList.get(i).setIdle();
+                    AGVList.get(i).isLeaving = false;
+                }
+                AGVList.get(i).playMotion();
+              }
+                //System.out.println("START AGV Truck");
+//              for(TruckCrane truckC : truckCraneList)
+//              {
+//                    System.out.println("\n" +truckC.truckCraneNode.getLocalTranslation());
+//                    truckC.setMotion(1);
+//                    truckC.playMotion();
+//              }
+//                for(TruckCrane truckC : truckCraneList)
+//                {
+//                      truckC.setMotion(2);
+//                      truckC.playMotion();
+//                }
+              /*System.out.println(inputBuffer.size());
+              for(String line: inputBuffer)
+              {
+                  System.out.println("comand : " + line);
+              }*/
             }
         }
-    };*/
+    };
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
