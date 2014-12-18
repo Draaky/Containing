@@ -44,8 +44,8 @@ public class Platform extends Node {
     
  // <editor-fold defaultstate="collapsed" desc="createPlatform">
     public void createPlatform() {
-        //Box platform = new Box(848f, 30f, 428.25f);
         Box platform = new Box(848f, 5f, 428.25f);
+        //Box platform = new Box(1696f, 5f, 856.5f);
         platform.scaleTextureCoordinates(new Vector2f(1, 1));
         
         Geometry p = new Geometry("platform", platform);

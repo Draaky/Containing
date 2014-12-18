@@ -121,7 +121,7 @@ public class Containing extends Thread {
         System.out.println(x);
         System.out.println(y);
         System.out.println(z);
-        sleep (1000);
+        sleep (2000);
         EchoClient.os.println(" tcAddTruck 1 2");
         EchoClient.os.println(" tcAddAGV 1 2");
         EchoClient.os.println(" tc 1 2");

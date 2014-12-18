@@ -82,19 +82,30 @@ public class Main extends SimpleApplication {
                     
         Platform p = new Platform(rootNode, assetManager);  // place the floor
         
-        // spawn 10 trucks, agv's and trucks.
+        // spawn 10 ship cranes.
         for(int i = 0; i < 10; i++)
+        {
+            //truckList.get(i).truckNode.setLocalTranslation(-778 - (i*2.9f),- 11.45f,300);
+            seaShipCraneList.add(new SeaShipCrane(this.rootNode, this.assetManager, new Vector3f(875,0,350-(i*60))));
+        }
+        for(int i = 0; i < 100; i++)
         {
             containerList.add( new Container(this.rootNode, this.assetManager));
             truckList.add( new Truck(this.rootNode, this.assetManager));
             truckList.get(i).addContainer(containerList.get(i));
             AGVList.add(new AGV(this.rootNode, this.assetManager));
             
-            truckList.get(i).truckNode.setLocalTranslation(-800 - (i*5),- 11.45f,-360);
+            int value = 0;
+            try{
+                value = Math.round(i/6);
+                //System.out.println("Value! "+ value);
+            }
+            catch(Exception e){
+                //halp
+            }
+            truckList.get(i).truckNode.setLocalTranslation(-805 + (i*2.9f) + (value * 1.8f),- 11.45f,300);
             AGVList.get(i).agvNode.setLocalTranslation(150+(10*i), - 11.45f, -150);
-            
-            seaShipCraneList.add(new SeaShipCrane(this.rootNode, this.assetManager, new Vector3f(875,0,350-(i*60))));
-            
+                        
         }
         for(int i = 0; i < 8; i++){
         if(shipCraneList.size() < 4)
@@ -125,7 +136,7 @@ public class Main extends SimpleApplication {
         for(int i = 0; i < 80; i++){
             StorageCraneList.add(
                     new StorageCrane(this.rootNode, this.assetManager, 
-                    new Vector3f(-797.5f+(i*9.6f),0,300)));
+                    new Vector3f(-797.5f+(i*19.2f),0,300)));
         }
         s = new SeaShip(rootNode, assetManager); // spawn a big ship.
         //s.rootNode.
