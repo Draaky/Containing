@@ -16,6 +16,7 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.scene.Spatial;
@@ -26,7 +27,7 @@ import com.jme3.water.WaterFilter;
 import java.util.LinkedList;
 
 public class Main extends SimpleApplication {
-
+    
     public static void main(final String[] args) {
         Main app = new Main();
         AppSettings settings = new AppSettings(false);
@@ -58,11 +59,15 @@ public class Main extends SimpleApplication {
     // JOS
     Spatial scene;
     FilterPostProcessor fpp;
-    private WaterFilter water;
-    private Vector3f lightdir = new Vector3f (-4f,-1f,5f);
+    private WaterFilter water;  
     public ArrayList<Container> contList = new ArrayList<Container>();
     ArrayList<BargeShip> bList = new ArrayList<BargeShip>();
     SeaShip s;
+    Train train;
+    Train [] wagons = new Train[35];
+    //universele schaal
+    public static final float Scale = 2f;
+    Container shipcontainers[][][] = new Container[20][6][16];
     
     @Override
     public void simpleInitApp() {
@@ -76,13 +81,19 @@ public class Main extends SimpleApplication {
         //initFloor();// create floor.
         
         //Jos`
-            initPPcWater();
-            initScene();
-            Interface();
+        initPPcWater();
+        initScene();
+        Interface();
+        initLight();
                     
         Platform p = new Platform(rootNode, assetManager);  // place the floor
+<<<<<<< .merge_file_a51316
 
         // spawn 10 ship cranes.
+=======
+        
+        // spawn 10 trucks, agvs and trucks.
+>>>>>>> .merge_file_a51320
         for(int i = 0; i < 10; i++)
         {
             //truckList.get(i).truckNode.setLocalTranslation(-778 - (i*2.9f),- 11.45f,300);
@@ -125,13 +136,37 @@ public class Main extends SimpleApplication {
             else
                 shipCraneList.add(new ShipCrane(this.rootNode, this.assetManager, new Vector3f(680-((i*60)+170),0,-450)));
         }
+<<<<<<< HEAD
+        
+        // spawn 10 truckcranes. Place AGVs and trucks at a location.
+        for(int k=0; k < 10;k++)
+        {
+            truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
+                           new Vector3f(-80 - (k*20),0,-400)));
+            /*truckCraneList.get(k).setAGV(AGVList.get(k));
+            truckCraneList.get(k).setTruck(truckList.get(k));*/
+            truckList.get(k).truckNode.setLocalTranslation(-150+(10*k), - 11.45f, 150);
+            AGVList.get(k).agvNode.setLocalTranslation(150+(10*k), - 11.45f, -150);
+            //useCommand("tc " + k + " 1");
+            seaShipCraneList.add(new SeaShipCrane(this.rootNode, this.assetManager, new Vector3f(750,0,100-(k*35))));
+=======
         // spawn 10 truckcranes. Place AGV's and trucks at a location.
         for(int k=0; k < 20;k++)
         {
             truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
                            new Vector3f(-80 - (k*20),0,-400)));
+>>>>>>> bafc5f88d8d6ce2eb1d6d2c10461dd264f992788
         }
         
+<<<<<<< HEAD
+       /* shipCraneList.add( new ShipCrane(this.rootNode, this.assetManager, 
+                           new Vector3f(100,0,0)));
+        
+        seaShipCraneList.add( new SeaShipCrane(this.rootNode, this.assetManager, 
+                           new Vector3f(-100,0,0)));*/
+        
+=======
+>>>>>>> bafc5f88d8d6ce2eb1d6d2c10461dd264f992788
         // spawn new bargeships
         for(int i = 0; i < 2; i++)
         {
@@ -145,6 +180,12 @@ public class Main extends SimpleApplication {
             b.shipNode.setLocalTranslation(x1, 0f, z1);
             x1 += 400f; 
         }        
+<<<<<<< HEAD
+       
+        s = new SeaShip(rootNode, assetManager); // spawn a big ship
+        newTrain(20);
+        
+=======
         for(int i = 0; i < 80; i++){
             StorageCraneList.add(
                     new StorageCrane(this.rootNode, this.assetManager, 
@@ -152,6 +193,7 @@ public class Main extends SimpleApplication {
 
         }
         s = new SeaShip(rootNode, assetManager); // spawn a big ship.
+>>>>>>> bafc5f88d8d6ce2eb1d6d2c10461dd264f992788
         //s.rootNode.
         
        // input commands for testing use.
@@ -228,18 +270,17 @@ public class Main extends SimpleApplication {
     // <editor-fold defaultstate="collapsed" desc="Lichten">
         private void initLight()
     {
-        /** A white ambient light source. */ 
         AmbientLight ambient = new AmbientLight();
         ambient.setColor(ColorRGBA.White);
         rootNode.addLight(ambient); 
 
-        /** A white, spot light source. */ 
         PointLight lamp = new PointLight();
         lamp.setPosition(Vector3f.ZERO);
         lamp.setColor(ColorRGBA.White);
+        lamp.setRadius(4000f);
+        lamp.setPosition(new Vector3f(1,1150,1));
         rootNode.addLight(lamp); 
         
-            /** A white, directional light source */ 
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);
@@ -256,7 +297,7 @@ public class Main extends SimpleApplication {
     public void initPPcWater()
     { 
         fpp = new FilterPostProcessor(assetManager); 
-        water = new WaterFilter(rootNode, lightdir); 
+        water = new WaterFilter(rootNode, new Vector3f (-4f,-1f,5f)); 
         water.setCenter(Vector3f.ZERO); 
         water.setRadius(260000000); 
         water.setWaveScale(0.012f); 
@@ -308,6 +349,19 @@ public class Main extends SimpleApplication {
         guiNode.attachChild(pic2);
     }
     // </editor-fold>
+    
+    //Train    
+    public void newTrain(int awagon)
+    {
+        for(int i=0; i<awagon;i++)
+        {
+        train = new Train(assetManager);
+        train.setLocalTranslation((400f - (36.9f*i)), -13.5f, 410f);
+        wagons[i] = train;
+        rootNode.attachChild(wagons[i]); 
+        }
+    }
+    
     @Override
     public void simpleUpdate(float tpf) {
         //TODO: add update code

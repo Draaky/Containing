@@ -36,6 +36,7 @@ public class SeaShip {
     private MotionPath path;
     private MotionEvent motionControl;
     private boolean active = true;
+    private Container shipcontainers[][][] = new Container[20][6][16];
     
     public SeaShip(Node rootNode, AssetManager assetManager)
     {
@@ -50,9 +51,7 @@ public class SeaShip {
         Spatial s = assetManager.loadModel("Models/ship/seaship.j3o");
         s.scale(1.20f, 1.20f, 1.20f);
         //schip.rotate(0.0f, -3.0f, 0.0f);      //eventueel
-        s.setLocalTranslation(880f, -
-                
-                15.1f, 15f);
+        s.setLocalTranslation(880f, -15.1f, 15f);
        
         // You must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
@@ -75,6 +74,11 @@ public class SeaShip {
         Container result = container;  //save container in new value;
         container = null;              //clean container.
         return result;
+    }
+    
+    public void setContainer(int x, int y, int z, Container container)
+    {
+        shipcontainers[x][y][z] = container;
     }
     
 //    public void move(){
@@ -106,9 +110,7 @@ public class SeaShip {
         path.setCycle(true);
         
         //path.addListener(new MotionPathListener() {
-                
            
-            
 //            public void onWayPointReach(MotionEvent control, int wayPointIndex) {
 //                System.out.println(wayPointIndex);
 //                 

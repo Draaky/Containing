@@ -57,7 +57,7 @@ public class Platform extends Node {
         //plat_mat.setColor("Color", ColorRGBA.Black); 
         this.rootNode.attachChild(p);
         
-        TextureKey key1 = new TextureKey("Textures/platformfinal2.jpg");
+        TextureKey key1 = new TextureKey("Textures/platformrails.jpg");
         key1.setGenerateMips(true);
         
         Texture tex1 = assetManager.loadTexture(key1);

@@ -22,7 +22,7 @@ public class Container {
     public Node rootNode;
     public Node containerNode;
     public AssetManager assetManager;
-    boolean isMoving;
+    public boolean isMoving;
     
     public Container(Node rootNode, AssetManager assetManager)
     {
