@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -45,29 +45,23 @@ public class SeaShipCrane {
     private MotionPath path;
     private MotionEvent motionControl;
     Vector3f spawnLoc;
-    Vector3f posSeaShip;
     Vector3f posAGV;
+    Vector3f magnetPos;
     
     
     public SeaShipCrane(Node rootNode, AssetManager assetManager, Vector3f spawnLoc)
     {
         this.rootNode = rootNode;
         this.assetManager = assetManager;
-        
-        
         container = null;
         truck = null;
         agv = null;
         this.spawnLoc = spawnLoc;
-        posSeaShip = new Vector3f(spawnLoc);
-        posAGV  = new Vector3f(spawnLoc);
         
-        posAGV.z = posAGV.z - 90;
-        posSeaShip.z += 60;
-        
+        magnetPos = new Vector3f(spawnLoc.x - 60f, spawnLoc.y + 23.5f, spawnLoc.z );
+        posAGV  = new Vector3f(magnetPos.x, 0f, magnetPos.z);
         System.out.println(spawnLoc);
         System.out.println(posAGV);
-        System.out.println(posSeaShip);
         createShipCrane();
     }
     
@@ -87,14 +81,14 @@ public class SeaShipCrane {
         Quaternion pitch90 = new Quaternion();
         pitch90.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
         crane.rotate(pitch90);
+        crane.rotate(pitch90);
+        
         
         Cylinder w = new Cylinder(20, 50, 2, 1, true);
         Geometry superMagnet = new Geometry("magnet", w);
         superMagnet.rotate((float)(0.5*Math.PI),0,0);
-        superMagnet.move(posAGV.x, posAGV.y + 25, posAGV.z);
-        
+        superMagnet.setLocalTranslation(magnetPos);
         superMagnet.setMaterial(mat2);
-
         seaShipCraneNode.attachChild(crane);
         seaShipCraneNode.attachChild(superMagnet);
         rootNode.attachChild(seaShipCraneNode);
@@ -141,7 +135,7 @@ public class SeaShipCrane {
     }
     public void setTruck(Truck truck){
         this.truck = truck;
-        truck.truckNode.setLocalTranslation(posSeaShip.x, posSeaShip.y - 11.45f, posSeaShip.z);
+        //truck.truckNode.setLocalTranslation(posSeaShip.x, posSeaShip.y - 11.45f, posSeaShip.z);
     }
     public void giveContainer(Truck truck){
         if(truck.container == null){
@@ -151,12 +145,13 @@ public class SeaShipCrane {
     }
     public void setAGV(AGV agv){
         this.agv = agv;
-        agv.agvNode.setLocalTranslation(posAGV.x, posAGV.y - 11.45f, posAGV.z);
+        agv.agvNode.setLocalTranslation(posAGV);
     }
     public void setMotion(int status){
         path = new MotionPath();
-        path.addWayPoint(new Vector3f(posAGV.x, posAGV.y + 25, posAGV.z));
-        path.addWayPoint(new Vector3f(posSeaShip.x, posSeaShip.y + 25, posSeaShip.z));
+        path.addWayPoint(new Vector3f(magnetPos));
+        //path.addWayPoint(new Vector3f(posSeaShip.x, posSeaShip.y + 25, posSeaShip.z));
+        path.addWayPoint(new Vector3f(magnetPos.x, magnetPos.y, magnetPos.z - 50));
         path.enableDebugShape(assetManager, rootNode);
         
         motionControl = new MotionEvent(seaShipCraneNode.getChild("magnet"),path);

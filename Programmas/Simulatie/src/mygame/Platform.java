@@ -72,7 +72,7 @@ public class Platform extends Node {
     private void Sounds(){
         //achtergrond geluid
         s = new AudioNode(assetManager, "Sounds/traffic-11.wav", true);
-        s.setLooping(true);
+        s.setLooping(false);
         s.setPositional(false);
         s.setVolume(3);
         rootNode.attachChild(s);

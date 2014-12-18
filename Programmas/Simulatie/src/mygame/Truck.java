@@ -29,7 +29,7 @@ public class Truck {
     Node rootNode;
     public Node truckNode;
     AssetManager assetManager;
-    Container container;
+    public Container container;
     boolean isMoving;
     
     private boolean active = true;
