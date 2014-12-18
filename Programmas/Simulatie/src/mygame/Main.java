@@ -87,13 +87,9 @@ public class Main extends SimpleApplication {
         initLight();
                     
         Platform p = new Platform(rootNode, assetManager);  // place the floor
-<<<<<<< .merge_file_a51316
 
         // spawn 10 ship cranes.
-=======
-        
-        // spawn 10 trucks, agvs and trucks.
->>>>>>> .merge_file_a51320
+
         for(int i = 0; i < 10; i++)
         {
             //truckList.get(i).truckNode.setLocalTranslation(-778 - (i*2.9f),- 11.45f,300);
@@ -106,7 +102,7 @@ public class Main extends SimpleApplication {
             truckList.get(i).addContainer(containerList.get(i));
             AGVList.add(new AGV(this.rootNode, this.assetManager));
             
-//<<<<<<< HEAD
+
             int value = 0;
             try{
                 value = Math.round(i/6);
@@ -135,9 +131,7 @@ public class Main extends SimpleApplication {
                 shipCraneList.add(new ShipCrane(this.rootNode, this.assetManager, new Vector3f(680-(i*60),0,-450)));
             else
                 shipCraneList.add(new ShipCrane(this.rootNode, this.assetManager, new Vector3f(680-((i*60)+170),0,-450)));
-        }
-<<<<<<< HEAD
-        
+        }      
         // spawn 10 truckcranes. Place AGVs and trucks at a location.
         for(int k=0; k < 10;k++)
         {
@@ -145,28 +139,16 @@ public class Main extends SimpleApplication {
                            new Vector3f(-80 - (k*20),0,-400)));
             /*truckCraneList.get(k).setAGV(AGVList.get(k));
             truckCraneList.get(k).setTruck(truckList.get(k));*/
-            truckList.get(k).truckNode.setLocalTranslation(-150+(10*k), - 11.45f, 150);
-            AGVList.get(k).agvNode.setLocalTranslation(150+(10*k), - 11.45f, -150);
+            //truckList.get(k).truckNode.setLocalTranslation(-150+(10*k), - 11.45f, 150);
+            //AGVList.get(k).agvNode.setLocalTranslation(150+(10*k), - 11.45f, -150);
             //useCommand("tc " + k + " 1");
-            seaShipCraneList.add(new SeaShipCrane(this.rootNode, this.assetManager, new Vector3f(750,0,100-(k*35))));
-=======
-        // spawn 10 truckcranes. Place AGV's and trucks at a location.
-        for(int k=0; k < 20;k++)
-        {
-            truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
-                           new Vector3f(-80 - (k*20),0,-400)));
->>>>>>> bafc5f88d8d6ce2eb1d6d2c10461dd264f992788
         }
-        
-<<<<<<< HEAD
+
        /* shipCraneList.add( new ShipCrane(this.rootNode, this.assetManager, 
                            new Vector3f(100,0,0)));
         
         seaShipCraneList.add( new SeaShipCrane(this.rootNode, this.assetManager, 
                            new Vector3f(-100,0,0)));*/
-        
-=======
->>>>>>> bafc5f88d8d6ce2eb1d6d2c10461dd264f992788
         // spawn new bargeships
         for(int i = 0; i < 2; i++)
         {
@@ -180,12 +162,12 @@ public class Main extends SimpleApplication {
             b.shipNode.setLocalTranslation(x1, 0f, z1);
             x1 += 400f; 
         }        
-<<<<<<< HEAD
+
        
         s = new SeaShip(rootNode, assetManager); // spawn a big ship
         newTrain(20);
         
-=======
+
         for(int i = 0; i < 80; i++){
             StorageCraneList.add(
                     new StorageCrane(this.rootNode, this.assetManager, 
@@ -193,7 +175,7 @@ public class Main extends SimpleApplication {
 
         }
         s = new SeaShip(rootNode, assetManager); // spawn a big ship.
->>>>>>> bafc5f88d8d6ce2eb1d6d2c10461dd264f992788
+
         //s.rootNode.
         
        // input commands for testing use.

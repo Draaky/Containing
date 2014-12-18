@@ -78,17 +78,17 @@ public class SeaShipCrane {
         
         crane.setLocalTranslation(new Vector3f(spawnLoc.x,spawnLoc.y-15,spawnLoc.z));
         
-<<<<<<< HEAD
+
 //        Quaternion pitch90 = new Quaternion();
 //        pitch90.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
 //        crane.rotate(pitch90);
-=======
+
         Quaternion pitch90 = new Quaternion();
         pitch90.fromAngleAxis(FastMath.PI/2, new Vector3f(0,1,0));
         crane.rotate(pitch90);
         crane.rotate(pitch90);
         
->>>>>>> bafc5f88d8d6ce2eb1d6d2c10461dd264f992788
+
         
         Cylinder w = new Cylinder(20, 50, 2, 1, true);
         Geometry superMagnet = new Geometry("magnet", w);
