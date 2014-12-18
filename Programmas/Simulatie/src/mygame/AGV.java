@@ -7,8 +7,15 @@
 package mygame;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.MotionPathListener;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Spline;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
@@ -25,6 +32,15 @@ public class AGV {
     Node agvNode;
     AssetManager assetManager;
     public Container container;
+    boolean isArrived = false;
+    boolean isLeaving = false;
+    boolean idle = true;
+    
+    private boolean active = true;
+    private boolean playing = false;
+    private MotionPath path;
+    private MotionEvent motionControl;
+    public Vector3f destination = new Vector3f();
     
     public AGV(Node rootNode, AssetManager assetManager)
     {
@@ -82,7 +98,12 @@ public class AGV {
     public void addContainer(Container container)
     {
         //System.out.println("AGV HAS CONTAIENR");
-        this.container = container;  
+        this.container = container;
+        System.out.println("TRUCK HAS CONTAINER");        
+        //container.containerNode.rotate(0,(float)(0.5*Math.PI),0);
+        container.containerNode.setLocalTranslation(0, 3.25f, 0);        
+        agvNode.attachChild(container.containerNode);
+        container.containerNode.scale(2f);
     }
     public Container removeContainer()
     {
@@ -98,9 +119,90 @@ public class AGV {
                 agvNode.getLocalTranslation().y + 1.75f,
                 agvNode.getLocalTranslation().z + 1.5f);
     }
-    public void arrived(){
-        container.isMoving = false;
-        container = null;
+    public void arrivedHeen(){
+//        container.isMoving = false;
+//        container = null;
+        isArrived = true;
+        isLeaving = true;
+    }
+    
+    public void arrivedTerug(){
+        isArrived = false;
+        isLeaving = false;
+    }
+    public void isIdle()
+    {
+        idle = true;
+        isArrived = false;
+    }
+    public void setMotionTC(){
+        path = new MotionPath();
+        path.addWayPoint(agvNode.getLocalTranslation());
+        //path.addWayPoint(new Vector3f(agvNode.getLocalTranslation().x, agvNode.getLocalTranslation().y, agvNode.getLocalTranslation().z));
+        path.addWayPoint(new Vector3f(agvNode.getLocalTranslation().x , -11.45f, agvNode.getLocalTranslation().z - 33));
+        path.addWayPoint(new Vector3f(destination.x, destination.y, destination.z -3));
+        path.addWayPoint(new Vector3f(destination.x, destination.y, destination.z -55));
+        path.setPathSplineType(Spline.SplineType.Linear);
+        path.enableDebugShape(assetManager, rootNode);
+        
+        motionControl = new MotionEvent(agvNode,path);
+        motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
+        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.PI, Vector3f.UNIT_Y));
+        //motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(1000f / path.getLength());
+        
+        path.addListener(new MotionPathListener() {
+
+            public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                if (path.getNbWayPoints() == wayPointIndex + 1) {
+                    arrivedHeen();       
+                } else {
+                    
+                }
+            }
+        });
+    }
+    public void setIdle(){
+        path = new MotionPath();
+        path.addWayPoint(agvNode.getLocalTranslation());
+        path.addWayPoint(new Vector3f(agvNode.getLocalTranslation().x , -11.45f, -325));
+        path.setPathSplineType(Spline.SplineType.Linear);
+        path.enableDebugShape(assetManager, rootNode);
+        
+        motionControl = new MotionEvent(agvNode,path);
+        motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
+        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.PI, Vector3f.UNIT_Y));
+        //motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(1000f / path.getLength());
+        
+        path.addListener(new MotionPathListener() {
+
+            public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                if (path.getNbWayPoints() == wayPointIndex + 1) {
+                    isIdle();       
+                } else {
+                    
+                }
+            }
+        });
+    }
+    public void playMotion() {
+        if (playing) {
+            playing = false;
+            motionControl.stop();
+        } else {
+            playing = true;
+            motionControl.play();
+        }
+    }
+    public void showMotion(){
+        if (active) {
+            active = false;
+            path.disableDebugShape();
+        } else {
+            active = true;
+            path.enableDebugShape(assetManager, rootNode);
+        }
     }
 }
 

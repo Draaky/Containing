@@ -8,11 +8,13 @@ package mygame;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Spline;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -31,11 +33,15 @@ public class Truck {
     AssetManager assetManager;
     public Container container;
     boolean isMoving;
+    boolean isArrived = false;
+    boolean isLeaving = false;
     
     private boolean active = true;
     private boolean playing = false;
     private MotionPath path;
     private MotionEvent motionControl;
+    private Vector3f deSpawnLoc = new Vector3f(-850, - 20000, -312);
+    public Vector3f destination = new Vector3f();
     
     public Truck(Node rootNode, AssetManager assetManager)
     {
@@ -94,8 +100,12 @@ public class Truck {
     }    
     public void addContainer(Container container) // add container to crane.
     {
-        System.out.println("TRUCK HAS CONTAIENR");
-        this.container = container;  
+        System.out.println("TRUCK HAS CONTAINER");        
+//        container.containerNode.rotate(0,(float)(0.5*Math.PI),0);
+        container.containerNode.setLocalTranslation(0, 3.25f, 3.5f);        
+        this.container = container;
+        truckNode.attachChild(container.containerNode);
+        container.containerNode.scale(2f);
     }
     public Container removeContainer()                  // remove container from crane.
     {
@@ -103,36 +113,92 @@ public class Truck {
         container = null;              //clean container.
         return result;
     }
-    public void move(){                 // move the container.
-        if(container != null)
-            container.containerNode.setLocalTranslation(
-                truckNode.getLocalTranslation().x,
-                truckNode.getLocalTranslation().y + 1.75f,
-                truckNode.getLocalTranslation().z + 1.5f);
-    }
-    public void arrived(){
-        container.isMoving = false;
+    public void removeContainerPerm()
+    {
+        truckNode.detachChild(container.containerNode);
         container = null;
     }
-    public void setMotion(){                    // set motion path.
+    public void move(){                 // move the container.
+//        if(container != null)
+//            container.containerNode.setLocalTranslation(
+//                truckNode.getLocalTranslation().x,
+//                truckNode.getLocalTranslation().y + 1.75f,
+//                truckNode.getLocalTranslation().z + 1.5f);
+    }
+    public void arrivedHeen(){
+//        container.isMoving = false;
+//        container = null;
+        isArrived = true;
+        isLeaving = true;
+    }
+    
+    public void arrivedTerug(){
+        isArrived = false;
+        isLeaving = false;
+    }
+    
+    public void setMotionHeen(){
         path = new MotionPath();
-        path.addWayPoint(new Vector3f(10, 3, 0));
-        path.addWayPoint(new Vector3f(10, 3, 10));
-        path.addWayPoint(new Vector3f(-40, 3, 10));
-        path.addWayPoint(new Vector3f(-40, 3, 0));
-        path.addWayPoint(new Vector3f(-40, 8, 0));
-        path.addWayPoint(new Vector3f(10, 8, 0));
-        path.addWayPoint(new Vector3f(10, 8, 10));
-        path.addWayPoint(new Vector3f(15, 8, 10));
+        path.addWayPoint(new Vector3f(-850, - 11.45f, -312));
+        path.addWayPoint(new Vector3f(-770, - 11.45f, -312));
+        path.addWayPoint(new Vector3f(-770, - 11.45f, -355));
+        //path.addWayPoint(new Vector3f(-300 , -11.45f, -355));
+        //path.addWayPoint(new Vector3f(-300 , -11.45f, -390));
+        path.addWayPoint(destination);
+        path.addWayPoint(new Vector3f(destination.x, destination.y, destination.z -55));
+        path.setPathSplineType(Spline.SplineType.Linear);
         path.enableDebugShape(assetManager, rootNode);
         
         motionControl = new MotionEvent(truckNode,path);
         motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
-        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.HALF_PI, Vector3f.UNIT_Y));
-        motionControl.setInitialDuration(10f);
-        motionControl.setSpeed(2f);     
-        path.setCycle(true);
+        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.PI, Vector3f.UNIT_Y));
+        //motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(1000f / path.getLength());
         
+        path.addListener(new MotionPathListener() {
+
+            public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                if (path.getNbWayPoints() == wayPointIndex + 1) {
+                    arrivedHeen();       
+                } else {
+                    
+                }
+            }
+        });
+    }    
+    
+    public void setMotionTerug(){
+        path = new MotionPath();
+        path.addWayPoint(new Vector3f(destination.x, destination.y, destination.z -10));
+//        path.addWayPoint(new Vector3f(-310 , -11.45f, -390));
+//        path.addWayPoint(new Vector3f(-310 , -11.45f, -365));
+        path.addWayPoint(new Vector3f(-780, - 11.45f, -365));
+        path.addWayPoint(new Vector3f(-780, - 11.45f, -332));
+        path.addWayPoint(new Vector3f(-850, - 11.45f, -332));
+        path.setPathSplineType(Spline.SplineType.Linear);
+        path.enableDebugShape(assetManager, rootNode);
+        
+        motionControl = new MotionEvent(truckNode,path);
+        motionControl.setDirectionType(MotionEvent.Direction.PathAndRotation);
+        motionControl.setRotation(new Quaternion().fromAngleNormalAxis(-FastMath.PI, Vector3f.UNIT_Y));
+        //motionControl.setInitialDuration(10f);
+        motionControl.setSpeed(1000f / path.getLength());
+        
+        path.addListener(new MotionPathListener() {
+
+            public void onWayPointReach(MotionEvent control, int wayPointIndex) {
+                if (path.getNbWayPoints() == wayPointIndex + 1) {
+                    arrivedTerug();                    
+                    truckNode.setLocalTranslation(deSpawnLoc);
+                    if(container != null)
+                    {
+                        removeContainerPerm();
+                    }
+                } else {
+                    
+                }
+            }
+        });
     }
     public void playMotion() {
         if (playing) {
