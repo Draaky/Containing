@@ -17,7 +17,8 @@ public class EchoClient implements Runnable {
   // The input stream
   private static DataInputStream is = null;
 
-  private static BufferedReader inputLine = null;
+  //private static BufferedReader inputLine = null;
+  
   private static boolean closed = false;
   public static String test;
   
@@ -42,22 +43,24 @@ public class EchoClient implements Runnable {
     String host = "localhost";
 
     if (true) {
-      System.out
-          .println("Usage: java MultiThreadChatClient <host> <portNumber>\n"
-              + "Now using host=" + host + ", portNumber=" + portNumber);
-    } else {
+      System.out.println("Now using host=" + host + ", portNumber=" + portNumber);
+    } 
+    //else {
       //host = args[0];
       //portNumber = Integer.valueOf(args[1]).intValue();
-    }
+    //}
 
     /*
      * Open a socket on a given host and port. Open input and output streams.
      */
     try {
       clientSocket = new Socket(host, portNumber);
-      inputLine = new BufferedReader(new InputStreamReader(System.in));
+      //inputLine = new BufferedReader(new InputStreamReader(System.in));
+      //making an outputstream
       os = new PrintStream(clientSocket.getOutputStream());
+      //making a inputstream
       is = new DataInputStream(clientSocket.getInputStream());
+      //error catching
     } catch (UnknownHostException e) {
       System.err.println("Don't know about host " + host);
     } catch (IOException e) {
@@ -127,11 +130,11 @@ public class EchoClient implements Runnable {
     try {
       while (true) {
         //System.out.println("test");
+          //reading inputstream
         responseLine = is.readLine();
-        
-        // use cmd.
+        //printing inputstream
         System.out.println(responseLine);
-        
+        //exit condition
         if (responseLine.indexOf("*** Bye") != -1)
         {
           System.exit(1);

@@ -33,8 +33,7 @@ public class EchoServer {
     int portNumber = 2222;
     if (args.length < 1) {
     //if (true) { 
-      System.out
-          .println("Server opened on Port <" + portNumber + ">");
+      System.out.println("Server opened on Port <" + portNumber + ">");
     } else {
       portNumber = Integer.valueOf(args[0]).intValue();
     }
@@ -96,20 +95,20 @@ class clientThread extends Thread {
     this.clientSocket = clientSocket;
     this.threads = threads;
     maxClientsCount = threads.length;
-    System.out.println("Constructor zegt JAH!!");
+    //System.out.println("Constructor zegt JAH!!");
   }
   @Override
   public void run() {
     int maxClientsCount = this.maxClientsCount;
     clientThread[] threads = this.threads;
-    System.out.println("JA DOET HET");
+    //System.out.println("JA DOET HET");
     try {
       /*
        * Create input and output streams for this client.
        */
       is = new DataInputStream(clientSocket.getInputStream());
       os = new PrintStream(clientSocket.getOutputStream());
-      os.println("Enter your name.");
+      //os.println("Enter your name.");
       String name = is.readLine().trim();
       os.println("Connection Succesfull " + name);
       for (int i = 0; i < maxClientsCount; i++) {

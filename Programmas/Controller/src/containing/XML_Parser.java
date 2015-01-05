@@ -23,9 +23,7 @@ public class XML_Parser {
    {
     try {
         //opening the xml file
-
 	File fXmlFile = new File("D:\\School\\Github\\Containing\\XML\\XML\\xml7.xml");
-
 	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	Document doc = dBuilder.parse(fXmlFile);
@@ -91,7 +89,7 @@ public class XML_Parser {
                         eContainer.y = Float.parseFloat(eElement.getElementsByTagName("y").item(0).getTextContent());
                         eContainer.z = Float.parseFloat(eElement.getElementsByTagName("z").item(0).getTextContent());
                         
-                        
+                        //sorting the containers on arrival method
                         if ("trein".equals(eContainer.asoortvervoer))
                         {
                             TreinContainers.add(eContainer);

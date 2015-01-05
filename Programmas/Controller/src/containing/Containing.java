@@ -5,47 +5,63 @@
  */
 package containing;
 
-import static java.lang.Thread.sleep;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.javatuples.Triplet;
-//import static java.util.Comparator.comparing;
 
 /**
  *
- * @author Arjen
+ * @author HUGO!!
  */
-
-
-
 public class Containing extends Thread {
 
-
-   
+public static List<Container> ZeeContainers = new ArrayList<Container>();
+public static List<Container> VrachtContainers = new ArrayList<Container>();
+public static List<Container> TreinContainers = new ArrayList<Container>();
+public static List<Container> BinnenContainers = new ArrayList<Container>();
     /**
      * @param args the command line arguments
      */
     public static void main(final String[] args) throws Exception {
-        // TODO code application logic here
-       
-        //EchoServer server = new EchoServer();
-        //sleep(1000);
-       
-       Thread EchoClientController = new Thread(){
-           public void run(){
-               EchoClient.main(args);
-           }
-       };
-       EchoClientController.start();
-    
+        
+        //Creating a thread for the EchoServer
+        Thread EchoServertest = new Thread() {
+            public void run() {
+                EchoServer.main(args);
+            }
+        };
+        EchoServertest.start();
+        
+        //Creating a thread for the EchoClient
+        Thread EchoClientController = new Thread() {
+            public void run() {
+                EchoClient.main(args);
+            }
+        };
+        EchoClientController.start();
 
-
+        //Creating a thread for the Clock
+        Thread Clockuh = new Thread() {
+            public void run() {
+             Clock.main(args);
+            }
+        };
+        Clockuh.start();
+        
+        //Running the XML Parser
         XML_Parser X = new XML_Parser();
+        BinnenContainers = X.BinnenContainers;
+        ZeeContainers = X.ZeeContainers;
+        VrachtContainers = X.VrachtContainers;
+        TreinContainers = X.TreinContainers;
+        
 
-        int test = X.ZeeContainers.size();
-        int test2 = X.BinnenContainers.size();
-        int test3 = X.VrachtContainers.size();
-        int test4 = X.TreinContainers.size();
+        
+        
+        int test = ZeeContainers.size();
+        int test2 = BinnenContainers.size();
+        int test3 = VrachtContainers.size();
+        int test4 = TreinContainers.size();
         int d;
         int m;
         float x = 0;
@@ -63,34 +79,61 @@ public class Containing extends Thread {
         System.out.println("---------------------------");
         System.out.println("Totaal: " + totaal);
         System.out.println("Errors: " + X.error);
+        
+        //Sorting the respective container lists on arrival time and date
+        Collections.sort(VrachtContainers, new ContComparator.CompaVan(false));
+        Collections.sort(VrachtContainers, new ContComparator.CompaTot(false));
+        Collections.sort(VrachtContainers, new ContComparator.CompadatumD());
+        Collections.sort(VrachtContainers, new ContComparator.CompadatumM());
+        Collections.sort(VrachtContainers, new ContComparator.CompadatumJ());
 
-        Collections.sort(X.VrachtContainers, new ContComparator.CompaVan(false));
-        Collections.sort(X.VrachtContainers, new ContComparator.CompaTot(false));
-        Collections.sort(X.VrachtContainers, new ContComparator.CompadatumD());
-        Collections.sort(X.VrachtContainers, new ContComparator.CompadatumM());
-        Collections.sort(X.VrachtContainers, new ContComparator.CompadatumJ());
+        Collections.sort(ZeeContainers, new ContComparator.CompaVan(false));
+        Collections.sort(ZeeContainers, new ContComparator.CompaTot(false));
+        Collections.sort(ZeeContainers, new ContComparator.CompadatumD());
+        Collections.sort(ZeeContainers, new ContComparator.CompadatumM());
+        Collections.sort(ZeeContainers, new ContComparator.CompadatumJ());
 
-        Collections.sort(X.ZeeContainers, new ContComparator.CompaVan(false));
-        Collections.sort(X.ZeeContainers, new ContComparator.CompaTot(false));
-        Collections.sort(X.ZeeContainers, new ContComparator.CompadatumD());
-        Collections.sort(X.ZeeContainers, new ContComparator.CompadatumM());
-        Collections.sort(X.ZeeContainers, new ContComparator.CompadatumJ());
+        Collections.sort(TreinContainers, new ContComparator.CompaVan(false));
+        Collections.sort(TreinContainers, new ContComparator.CompaTot(false));
+        Collections.sort(TreinContainers, new ContComparator.CompadatumD());
+        Collections.sort(TreinContainers, new ContComparator.CompadatumM());
+        Collections.sort(TreinContainers, new ContComparator.CompadatumJ());
 
-        Collections.sort(X.TreinContainers, new ContComparator.CompaVan(false));
-        Collections.sort(X.TreinContainers, new ContComparator.CompaTot(false));
-        Collections.sort(X.TreinContainers, new ContComparator.CompadatumD());
-        Collections.sort(X.TreinContainers, new ContComparator.CompadatumM());
-        Collections.sort(X.TreinContainers, new ContComparator.CompadatumJ());
-
-        Collections.sort(X.BinnenContainers, new ContComparator.CompaVan(false));
-        Collections.sort(X.BinnenContainers, new ContComparator.CompaTot(false));
-        Collections.sort(X.BinnenContainers, new ContComparator.CompadatumD());
-        Collections.sort(X.BinnenContainers, new ContComparator.CompadatumM());
-        Collections.sort(X.BinnenContainers, new ContComparator.CompadatumJ());
-
+        Collections.sort(BinnenContainers, new ContComparator.CompaVan(false));
+        Collections.sort(BinnenContainers, new ContComparator.CompaTot(false));
+        Collections.sort(BinnenContainers, new ContComparator.CompadatumD());
+        Collections.sort(BinnenContainers, new ContComparator.CompadatumM());
+        Collections.sort(BinnenContainers, new ContComparator.CompadatumJ());
+        Thread AankomstZee = new Thread() {
+            public void run() {
+             Aankomstzee.main(args);
+            }
+        };
+        AankomstZee.start();
+        
+        Thread AankomstBinnen = new Thread() {
+            public void run() {
+             Clock.main(args);
+            }
+        };
+        //AankomstBinnen.start();
+        
+        Thread AankomstVracht = new Thread() {
+            public void run() {
+             Clock.main(args);
+            }
+        };
+        //AankomstVracht.start();
+        
+        Thread AankomstTrein = new Thread() {
+            public void run() {
+             Clock.main(args);
+            }
+        };
+        //AankomstTrein.start();
         System.out.println("Biggest X value of Train");
 
-        for (Container C : X.ZeeContainers) {
+        for (Container C : ZeeContainers) {
             tempx = C.x;
             if (x < tempx) {
                 x = tempx;
@@ -105,8 +148,8 @@ public class Containing extends Thread {
             if (z < tempz) {
                 z = tempz;
             }
-            
-       // System.out.println(" " + d + " / " + m + " / " + j + " Van:  " + C.aVan + "   Tot: " + C.aTot);
+
+            // System.out.println(" " + d + " / " + m + " / " + j + " Van:  " + C.aVan + "   Tot: " + C.aTot);
             //EchoServer T1 = new EchoServer( "Testserver");
             //T1.start();
             //EchoClient t = new EchoClient();      
@@ -114,77 +157,26 @@ public class Containing extends Thread {
         System.out.println(x);
         System.out.println(y);
         System.out.println(z);
-        sleep (2000);
-        EchoClient.os.println(" tcAddTruck 1 2");
-        EchoClient.os.println(" tcAddAGV 1 2");
-        EchoClient.os.println(" tc 1 2");
+       
         
+        //EchoClient.os.println("doe iets hier");
         
-    //EchoServer ES = new EchoServer("Localhost");
- 
-        
-//EchoServer ES = new EchoServer();
-   // Z.test();
-        //SOK_1_CLIENT SC = new SOK_1_CLIENT();
-        //  for (int i = 0; i < 10000; i++) {
-        //    Z.testsend(i);
-        // }
-            //for (int i = 0; i < 10000; i++) {
-        // SS.run("Testing nr.");
-        //SC.run();  
-    }
+        //stress test method
+       //send("stress test nr. ");
 
+
+    }
 
     public void test() {
         //XML_Parser l = new XML_Parser();
 
     }
-
+    //send method to send information via sockets to the other connected programms
     public static void send(String msg) {
-        EchoClient.os.println(msg);
-    }
-
-    
-    public void freerkTesting()
-    {
-        Opslag opslag = new Opslag();
-    XML_Parser X2 = new XML_Parser();
-    StorageRowNumber trw = new StorageRowNumber();
-    
-    for(Container c : X2.ZeeContainers)
-    {
-            List<Container> added = opslag.container;
-            int i = added.size();
-            Triplet newPlek = new Triplet(null, null, null);
-            System.out.println(c.vsoortvervoer);
-            
-            for (int j = 0; j < 20; j++) {
-                if(newPlek.getValue0() == null)
-                {
-                    newPlek = opslag.getStoragePosition(c, trw.returnRowNumber(c.vsoortvervoer)+j, added);
-                }
-            }
-
-              if(newPlek.getValue0() == null)
-              {
-                break;
-              }
-              
-            //System.out.println(i);
-            System.out.println("newPlek: "+newPlek);
-    }
-    
-    System.out.println(opslag.count);
-    System.out.println(opslag.container.size());
-    
-    
-        System.out.println("---------------------------------------------------");
-
-        for (int i = 0; i < 80; i++) {
-            List<Container> tempcheck = opslag.getRowList(i, opslag.container);
-            System.out.println(i+": "+tempcheck.size());
+        for (int i = 0; i < 10000; i++) {
+            EchoClient.os.println(msg + " " + i);
         }
+
     }
-    
-    
+
 }

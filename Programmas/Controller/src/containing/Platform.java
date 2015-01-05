@@ -2,12 +2,10 @@ package containing;
 
 import java.util.List;
 
-public class Platform extends Opslag {
+public class Platform extends Storage {
 
 	public List Containers;
-        /*Vector3f location; 
-	public List Loc(xloc, yloc, zloc){
-            
-        }*/
+
+	//public List Loc(xloc, yloc, zloc);
 
 }

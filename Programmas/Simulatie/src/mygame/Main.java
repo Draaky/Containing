@@ -52,7 +52,7 @@ public class Main extends SimpleApplication {
     ArrayList<SeaShipCrane> seaShipCraneList = new ArrayList<SeaShipCrane>();
     ArrayList<Container> containerList = new ArrayList<Container>();
     ArrayList<AGV> AGVList = new ArrayList<AGV>();
-    ArrayList<StorageCrane> StorageCraneList = new ArrayList<StorageCrane>();
+    ArrayList<StorageCrane> storageCraneList = new ArrayList<StorageCrane>();
     Box    floor;
     Quaternion pitch90 = new Quaternion();
     
@@ -72,7 +72,7 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         viewPort.setBackgroundColor(ColorRGBA.LightGray);
-        flyCam.setMoveSpeed(150);
+        flyCam.setMoveSpeed(300);
         flyCam.setRotationSpeed(10f);
         cam.setLocation(new Vector3f(10f,20f,-35f)); // set cam location
         cam.setFrustumFar(9000);    // set how far cam can see
@@ -102,7 +102,7 @@ public class Main extends SimpleApplication {
             truckList.get(i).addContainer(containerList.get(i));
             AGVList.add(new AGV(this.rootNode, this.assetManager));
             
-
+            // fix for placement of agv/trucks.
             int value = 0;
             try{
                 value = Math.round(i/6);
@@ -112,7 +112,7 @@ public class Main extends SimpleApplication {
                 //halp
             }
             truckList.get(i).truckNode.setLocalTranslation(-805 + (i*2.9f) + (value * 1.8f),- 11.45f,300);
-            AGVList.get(i).agvNode.setLocalTranslation(150+(10*i), - 11.45f, -150);
+            AGVList.get(i).agvNode.setLocalTranslation(-805 + (i*2.9f) + (value * 1.8f),- 11.45f,-300);
                         
 /*=======
             truckList.get(i).truckNode.setLocalTranslation(-800 - (i*5),- 11.45f,-360);
@@ -133,10 +133,10 @@ public class Main extends SimpleApplication {
                 shipCraneList.add(new ShipCrane(this.rootNode, this.assetManager, new Vector3f(680-((i*60)+170),0,-450)));
         }      
         // spawn 10 truckcranes. Place AGVs and trucks at a location.
-        for(int k=0; k < 10;k++)
+        for(int k=0; k < 20;k++)
         {
             truckCraneList.add( new TruckCrane(this.rootNode, this.assetManager, 
-                           new Vector3f(-80 - (k*20),0,-400)));
+                           new Vector3f(-80 - (k*10),0,-400)));
             /*truckCraneList.get(k).setAGV(AGVList.get(k));
             truckCraneList.get(k).setTruck(truckList.get(k));*/
             //truckList.get(k).truckNode.setLocalTranslation(-150+(10*k), - 11.45f, 150);
@@ -169,7 +169,7 @@ public class Main extends SimpleApplication {
         
 
         for(int i = 0; i < 80; i++){
-            StorageCraneList.add(
+            storageCraneList.add(
                     new StorageCrane(this.rootNode, this.assetManager, 
                     new Vector3f(-797.5f+(i*19.2f),0,300)));
 
@@ -187,30 +187,8 @@ public class Main extends SimpleApplication {
        inputManager.addListener(actionListener, "shoot", "play");
        
         
-       // useCommand("tc 2 1");
+       useCommand("cmd storage2 1 44");
         
-       // <editor-fold defaultstate="collapsed" desc="Thread">
-       // Thread  for using commands 
-       /* Thread thread;
-        thread = new Thread(){
-            @Override
-            public void run(){
-                System.out.println("Thread Running, checking inputbuffer.");
-                while(true){
-                    if (!inputBuffer.isEmpty())
-                    {
-                        System.out.println("pop" + inputBuffer.getFirst());
-                        useCommand(inputBuffer.pop());
-                    }
-                    else{
-                        // do nothing // this is bug fix.
-                        System.out.print("");
-                    }
-                }
-            }
-        };
-        thread.start();*/
-       // </editor-fold>
     }
     // <editor-fold defaultstate="collapsed" desc="Platformen eromheen">
     private void TreinPlatform(){
@@ -407,6 +385,28 @@ public class Main extends SimpleApplication {
                 }
                 catch(Exception e){System.out.println(e);}
             }
+            else if(cmd.equals("storage")) // ShipCrane
+            { // id = welke kraan, action = welke rij.
+                try{
+                    int deep = Integer.parseInt(parts[3]);
+                    int height = Integer.parseInt(parts[4]);
+                }catch(Exception e){System.out.println(e);}
+                try{
+                   // System.out.println(shipCraneList.get(id));
+                    storageCraneList.get(id).moveLeftRight(action);
+                    storageCraneList.get(id).playMotion();
+                }
+                catch(Exception e){System.out.println(e);}
+            }
+            else if(cmd.equals("storage2")) // ShipCrane
+            { // id = welke kraan, action = welke rij.
+                try{
+                   // System.out.println(shipCraneList.get(id));
+                    storageCraneList.get(id).setMotion(action, 1);
+                    storageCraneList.get(id).playMotion();
+                }
+                catch(Exception e){System.out.println(e);}
+            }
             else if(cmd.equals("ssc")) // SeaShipCrane
             {
                 try{
@@ -473,8 +473,8 @@ public class Main extends SimpleApplication {
 //                    truckC.playMotion();
 //              }
           }
-          if (name.equals("shoot") && !keyPressed) {
-              for(int i = 0; i < truckList.size(); i++)
+          if (name.equals("shoot") && !keyPressed) { // commented out size because there are more trucks than cranes.
+              for(int i = 0; i < 20; i++)//truckList.size(); i++)
               {
                 if(truckList.get(i).isLeaving == true)
                 {
@@ -482,7 +482,7 @@ public class Main extends SimpleApplication {
                 }
                 if(truckList.get(i).isLeaving == false)
                 {
-                    innerloop: for(int j = 0; j < truckCraneList.size(); j++)
+                    innerloop: for(int j = 0; j < 20; j++)//truckCraneList.size(); j++)
                     {
                         if(truckCraneList.get(j).truck == null)
                         {
@@ -497,7 +497,7 @@ public class Main extends SimpleApplication {
                 truckList.get(i).playMotion();
                 if(AGVList.get(i).idle == true && AGVList.get(i).isLeaving == false)
                 {
-                    innerloop: for(int j = 0; j < truckCraneList.size(); j++)
+                    innerloop: for(int j = 0; j < 20; j++)//truckCraneList.size(); j++)
                     {
                         if(truckCraneList.get(j).agv == null)
                         {
